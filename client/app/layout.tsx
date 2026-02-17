@@ -12,6 +12,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://srmroomie.ktr.srminsider.live"),
   title: "SRM ROOMIE | Find Your Perfect Roommate at SRM",
   description:
     "Connect with verified SRM students and find your ideal roommate. Real profiles, real students, instant matching.",
@@ -23,10 +24,15 @@ export const metadata: Metadata = {
     "roommate finder",
     "SRM Insider",
   ],
+  alternates: {
+    canonical: "https://srmroomie.ktr.srminsider.live",
+  },
   openGraph: {
     title: "SRM ROOMIE | Find Your Perfect Roommate at SRM",
     description:
       "Connect with verified SRM students and find your ideal roommate.",
+    url: "https://srmroomie.ktr.srminsider.live",
+    siteName: "SRM ROOMIE",
     type: "website",
   },
 };
@@ -35,6 +41,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   name: "SRM ROOMIE",
+  url: "https://srmroomie.ktr.srminsider.live",
   description:
     "Connect with verified SRM students and find your ideal roommate.",
   applicationCategory: "UtilitiesApplication",
@@ -53,6 +60,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" data-theme="dark" suppressHydrationWarning>
+      <head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
+        />
+      </head>
       <body
         className={`${inter.variable} antialiased min-h-screen flex flex-col relative`}
         style={{
@@ -82,6 +95,38 @@ export default function RootLayout({
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function() {
+                  function resetViewport() {
+                    setTimeout(function() {
+                      window.scrollTo(0, window.scrollY);
+                      document.body.style.height = '100%';
+                      requestAnimationFrame(function() {
+                        document.body.style.height = '';
+                      });
+                    }, 100);
+                  }
+                  document.addEventListener('focusout', function(e) {
+                    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT')) {
+                      resetViewport();
+                    }
+                  });
+                  if (window.visualViewport) {
+                    var prevHeight = window.visualViewport.height;
+                    window.visualViewport.addEventListener('resize', function() {
+                      var currHeight = window.visualViewport.height;
+                      if (currHeight > prevHeight + 50) {
+                        resetViewport();
+                      }
+                      prevHeight = currHeight;
+                    });
+                  }
+                })();
+              `,
+            }}
           />
         </ThemeProvider>
       </body>

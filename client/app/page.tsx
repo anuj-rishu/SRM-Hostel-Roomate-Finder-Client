@@ -30,7 +30,10 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="relative flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center overflow-hidden">
+    <div
+      className="relative flex flex-col items-center justify-center overflow-hidden"
+      style={{ minHeight: "calc(100dvh - 4rem)" }}
+    >
       <div className="absolute inset-0 bg-[linear-gradient(var(--accent)/3_1px,transparent_1px),linear-gradient(90deg,var(--accent)/3_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none opacity-30" />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-[radial-gradient(ellipse_at_center,var(--accent-glow),transparent_70%)] pointer-events-none" />
 
