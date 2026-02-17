@@ -80,19 +80,24 @@ export default function Dashboard() {
                         <FollowBanner />
                     </div>
                     {data?.roommates && data.roommates.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {data.roommates.map((student, index) => (
-                                <RoommateCard
-                                    key={index}
-                                    name={student.studentName}
-                                    department="Student"
-                                    year="N/A"
-                                    hostel={data.myRoom?.hostelName || "SRM Hostel"}
-                                    bio={`Contact: ${student.email} | ${student.phone}`}
-                                    interests={[]}
-                                    imageUrl={`https://api.dicebear.com/7.x/initials/svg?seed=${student.registerNo}`}
-                                />
-                            ))}
+                        <div className="space-y-6">
+                            <h2 className="text-xl font-semibold text-gray-900">
+                                {data.roommates.length > 1 ? "Your Roommates" : "Your Roommate"}
+                            </h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {data.roommates.map((student, index) => (
+                                    <RoommateCard
+                                        key={index}
+                                        name={student.studentName}
+                                        department="Student"
+                                        year="N/A"
+                                        hostel={data.myRoom?.hostelName || "SRM Hostel"}
+                                        bio={`Contact: ${student.email} | ${student.phone}`}
+                                        interests={[]}
+                                        imageUrl={`https://api.dicebear.com/7.x/initials/svg?seed=${student.registerNo}`}
+                                    />
+                                ))}
+                            </div>
                         </div>
                     ) : (
                         <div className="text-center py-12 bg-white rounded-xl border border-dashed border-gray-300 shadow-sm">
