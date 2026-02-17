@@ -1,78 +1,49 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
+import { Inter } from "next/font/google";
+import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import "./globals.css";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: "SRM ROOMIE | Find Your Perfect Roommate at SRM",
-  description: "SRM ROOMIE helps SRM students connect with compatible roommates based on lifestyle, hostel block, and interests. Powered by SRM Insider Community.",
-  keywords: ["SRM ROOMIE", "SRM Hostel", "SRM Insider", "Student Housing", "SRM University", "Roommate Matching"],
-  authors: [{ name: "SRM Insider Community" }],
-  creator: "SRM Insider Community",
-  publisher: "SRM Insider Community",
-  metadataBase: new URL("https://srmroomie.ktr.srminsider.live"),
-  alternates: {
-    canonical: "/",
-  },
+  description:
+    "Connect with verified SRM students and find your ideal roommate. Real profiles, real students, instant matching.",
+  keywords: [
+    "SRM",
+    "roommate",
+    "hostel",
+    "SRM University",
+    "roommate finder",
+    "SRM Insider",
+  ],
   openGraph: {
-    title: "SRM ROOMIE | Find Your Perfect Roommate",
-    description: "Connect with verified SRM students, match by hostel preferences, and find your ideal roommate. Safe, secure, and student-focused.",
-    url: "https://srmroomie.ktr.srminsider.live",
-    siteName: "SRM ROOMIE",
-    locale: "en_US",
+    title: "SRM ROOMIE | Find Your Perfect Roommate at SRM",
+    description:
+      "Connect with verified SRM students and find your ideal roommate.",
     type: "website",
-    images: [
-      {
-        url: "https://srmroomie.ktr.srminsider.live/opengraph-image.png",
-        width: 1200,
-        height: 630,
-        alt: "SRM ROOMIE Preview",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "SRM ROOMIE",
-    description: "Find your perfect roommate at SRM University. Verified profiles, hostel matching, and more.",
-    creator: "@srminsider",
-    images: ["https://srmroomie.ktr.srminsider.live/opengraph-image.png"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
   },
 };
 
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "SRM ROOMIE",
-  "url": "https://srmroomie.ktr.srminsider.live",
-  "description": "The official roommate matching platform for SRM University students.",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "https://srmroomie.ktr.srminsider.live/search?q={search_term_string}",
-    "query-input": "required name=search_term_string"
-  }
+  "@type": "WebApplication",
+  name: "SRM ROOMIE",
+  description:
+    "Connect with verified SRM students and find your ideal roommate.",
+  applicationCategory: "UtilitiesApplication",
+  operatingSystem: "Web",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "INR",
+  },
 };
 
 export default function RootLayout({
@@ -81,32 +52,38 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="dark" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-gray-100 text-gray-900`}
+        className={`${inter.variable} antialiased min-h-screen flex flex-col relative`}
+        style={{
+          background: "var(--bg-primary)",
+          transition: "background 0.4s ease",
+        }}
       >
-        <Header />
-        <main className="flex-1 flex flex-col">
-          {children}
-        </main>
-        <Footer />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        {/* Google Analytics */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-8P87N5679V"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-8P87N5679V');
-          `}
-        </Script>
+        <ThemeProvider>
+          <div className="noise-overlay" />
+          <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 transition-opacity duration-500">
+            <div
+              className="glow-orb w-[500px] h-[500px] -top-[200px] -left-[100px] animate-blob opacity-30"
+              style={{ background: "var(--accent-glow)" }}
+            />
+            <div
+              className="glow-orb w-[400px] h-[400px] top-[40%] -right-[100px] animate-blob animation-delay-2000 opacity-20"
+              style={{ background: "var(--accent-glow)" }}
+            />
+            <div
+              className="glow-orb w-[350px] h-[350px] -bottom-[100px] left-[30%] animate-blob animation-delay-4000 opacity-15"
+              style={{ background: "var(--accent-glow)" }}
+            />
+          </div>
+          <Header />
+          <main className="flex-1 flex flex-col relative z-10">{children}</main>
+          <Footer />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
+        </ThemeProvider>
       </body>
     </html>
   );

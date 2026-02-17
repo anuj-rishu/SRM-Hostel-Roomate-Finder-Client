@@ -1,192 +1,290 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Users, Search, Menu, X, ShieldAlert, LogOut } from "lucide-react";
+import {
+  Users,
+  Menu,
+  X,
+  ShieldAlert,
+  LogOut,
+  Sparkles,
+  Sun,
+  Moon,
+} from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { auth } from "@/lib/api";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import { useTheme } from "@/components/ThemeProvider";
 
 export function Header() {
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [privacyOpen, setPrivacyOpen] = useState(false);
-    const [user, setUser] = useState<{ username: string; registernumber: string } | null>(null);
-    const router = useRouter();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
+  const [user, setUser] = useState<{
+    username: string;
+    registernumber: string;
+  } | null>(null);
+  const [scrolled, setScrolled] = useState(false);
+  const { theme, toggleTheme } = useTheme();
+  const router = useRouter();
+  const pathname = usePathname();
 
-    useEffect(() => {
-        // Check for user in localStorage
-        const savedUser = localStorage.getItem("user");
-        if (savedUser) {
-            setUser(JSON.parse(savedUser));
-        }
-    }, []);
-
-    const handleLogout = () => {
-        auth.logout();
+  const checkUser = useCallback(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch {
         setUser(null);
-        router.push("/");
+      }
+    } else {
+      setUser(null);
+    }
+  }, []);
+
+  useEffect(() => {
+    checkUser();
+  }, [pathname, checkUser]);
+
+  useEffect(() => {
+    const handleLogin = () => checkUser();
+    window.addEventListener("user-login", handleLogin);
+    window.addEventListener("storage", handleLogin);
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    const interval = setInterval(checkUser, 500);
+    return () => {
+      window.removeEventListener("user-login", handleLogin);
+      window.removeEventListener("storage", handleLogin);
+      window.removeEventListener("scroll", handleScroll);
+      clearInterval(interval);
     };
+  }, [checkUser]);
 
-    return (
-        <>
-            <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/60 shadow-sm transition-all duration-200">
-                <div className="container flex h-16 items-center justify-between px-4 md:px-6">
-                    <Link href="/" className="flex items-center gap-2 group transition-opacity hover:opacity-90">
-                        <div className="bg-blue-600 p-1.5 rounded-lg shadow-md group-hover:shadow-blue-500/25 transition-all duration-300 transform group-hover:scale-105">
-                            <Users className="h-5 w-5 text-white" />
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="font-bold text-lg tracking-tight text-gray-900 leading-tight">
-                                SRM ROOMIE
-                            </span>
-                            <span className="text-[10px] uppercase tracking-wider text-gray-500 font-medium leading-none">
-                                by SRM Insider Community
-                            </span>
-                        </div>
-                    </Link>
+  const handleLogout = () => {
+    auth.logout();
+    setUser(null);
+    router.push("/");
+  };
 
-                    <nav className="hidden md:flex items-center gap-6">
-                        <button
-                            onClick={() => setPrivacyOpen(true)}
-                            className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors flex items-center gap-1"
-                        >
-                            <ShieldAlert className="h-4 w-4" />
-                            Privacy Policy
-                        </button>
+  return (
+    <>
+      <header
+        className={`sticky top-0 z-50 w-full transition-all duration-500 ${scrolled ? "bg-[var(--header-bg)] backdrop-blur-xl border-b border-[var(--border-primary)] shadow-[var(--shadow-sm)]" : "bg-transparent border-b border-transparent"}`}
+      >
+        <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-sky-500 to-cyan-500 rounded-xl blur-md opacity-30 group-hover:opacity-50 transition-opacity duration-300" />
+              <div className="relative bg-gradient-to-br from-sky-500 to-cyan-600 p-2 rounded-xl shadow-lg group-hover:scale-105 transition-transform duration-300">
+                <Users className="h-4.5 w-4.5 text-white" />
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <span className="font-extrabold text-lg tracking-tight text-[var(--text-primary)] leading-tight">
+                SRM ROOMIE
+              </span>
+              <span className="text-[9px] uppercase tracking-[0.15em] text-[var(--accent)] font-semibold leading-none opacity-70">
+                by SRM Insider Community
+              </span>
+            </div>
+          </Link>
 
-                        {user ? (
-                            <div className="flex items-center gap-4">
-                                <div className="flex items-center gap-2 bg-blue-50 px-3 py-1.5 rounded-full border border-blue-100">
-                                    <img
-                                        src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.username}`}
-                                        alt="Avatar"
-                                        className="h-6 w-6 rounded-full bg-white border border-blue-200"
-                                    />
-                                    <span className="text-sm font-medium text-blue-900 max-w-[100px] truncate">
-                                        {user.username.split(" ")[0]}
-                                    </span>
-                                </div>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={handleLogout}
-                                    className="text-gray-500 hover:text-red-600 hover:bg-red-50"
-                                    title="Logout"
-                                >
-                                    <LogOut className="h-4 w-4" />
-                                </Button>
-                            </div>
-                        ) : (
-                            <Link
-                                href="/dashboard"
-                                className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
-                            >
-                                Find Roommates
-                            </Link>
-                        )}
-
-                    </nav>
-
-                    <button
-                        className="md:hidden p-2 rounded-md hover:bg-gray-100 text-gray-600"
-                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                    >
-                        {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-                    </button>
+          <nav className="hidden md:flex items-center gap-1.5">
+            <button
+              onClick={() => setPrivacyOpen(true)}
+              className="text-sm font-medium text-[var(--text-primary)] hover:text-[var(--accent)] px-3 py-2 rounded-xl hover:bg-[var(--bg-hover)] transition-all duration-300 flex items-center gap-1.5 cursor-pointer"
+            >
+              <ShieldAlert className="h-3.5 w-3.5" />
+              Privacy
+            </button>
+            <button
+              onClick={toggleTheme}
+              className="p-2.5 rounded-xl hover:bg-[var(--bg-hover)] text-[var(--text-primary)] hover:text-[var(--accent)] transition-all duration-300 cursor-pointer"
+              title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+            >
+              {theme === "dark" ? (
+                <Sun className="h-4 w-4" />
+              ) : (
+                <Moon className="h-4 w-4" />
+              )}
+            </button>
+            {user ? (
+              <div className="flex items-center gap-2 ml-1">
+                <div className="flex items-center gap-2.5 bg-[var(--accent-subtle)] px-3 py-1.5 rounded-full border border-[var(--border-accent)]">
+                  <div className="relative">
+                    <img
+                      src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.username}&backgroundColor=0ea5e9`}
+                      alt="Avatar"
+                      className="h-6 w-6 rounded-full ring-2 ring-[var(--accent)]/30"
+                    />
+                    <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-[var(--bg-primary)]" />
+                  </div>
+                  <span className="text-sm font-medium text-[var(--text-primary)] max-w-[100px] truncate">
+                    {user.username.split(" ")[0]}
+                  </span>
                 </div>
-
-                {mobileMenuOpen && (
-                    <div className="md:hidden border-t border-gray-200 bg-white absolute w-full left-0 shadow-lg animate-in slide-in-from-top-5">
-                        <div className="container px-4 py-4 flex flex-col gap-4">
-                            {user ? (
-                                <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
-                                    <div className="flex items-center gap-2">
-                                        <img
-                                            src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.username}`}
-                                            alt="Avatar"
-                                            className="h-8 w-8 rounded-full bg-white border border-gray-200"
-                                        />
-                                        <div className="flex flex-col">
-                                            <span className="text-sm font-semibold text-gray-900">{user.username}</span>
-                                            <span className="text-xs text-gray-500">{user.registernumber}</span>
-                                        </div>
-                                    </div>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() => {
-                                            handleLogout();
-                                            setMobileMenuOpen(false);
-                                        }}
-                                        className="text-gray-500 hover:text-red-600"
-                                    >
-                                        <LogOut className="h-4 w-4" />
-                                    </Button>
-                                </div>
-                            ) : (
-                                <Link
-                                    href="/dashboard"
-                                    className="text-base font-medium text-gray-600 hover:text-blue-600 p-2 rounded-md hover:bg-gray-50"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                >
-                                    Find Roommates
-                                </Link>
-                            )}
-
-                            <button
-                                onClick={() => {
-                                    setPrivacyOpen(true);
-                                    setMobileMenuOpen(false);
-                                }}
-                                className="text-base font-medium text-gray-600 hover:text-blue-600 p-2 rounded-md hover:bg-gray-50 flex items-center gap-2 text-left"
-                            >
-                                <ShieldAlert className="h-4 w-4" />
-                                Privacy Policy
-                            </button>
-                        </div>
-                    </div>
-                )}
-            </header>
-
-            {privacyOpen && (
-                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200 border border-gray-100">
-                        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
-                            <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                                <ShieldAlert className="h-5 w-5 text-blue-600" />
-                                Privacy Policy
-                            </h3>
-                            <button
-                                onClick={() => setPrivacyOpen(false)}
-                                className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100 transition-colors"
-                            >
-                                <X className="h-5 w-5" />
-                            </button>
-                        </div>
-                        <div className="p-6 space-y-4">
-                            <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 text-sm text-blue-800">
-                                <p className="font-semibold mb-1">We respect your privacy</p>
-                                We do not store your login token.
-                            </div>
-                            <p className="text-gray-600 text-sm leading-relaxed">
-                                We only store essential user information such as:
-                            </p>
-                            <ul className="list-disc pl-5 space-y-2 text-sm text-gray-600">
-                                <li><strong className="text-gray-800">Name</strong> and <strong className="text-gray-800">Contact Details</strong></li>
-                                <li><strong className="text-gray-800">Hostel Details</strong> (Block, Room Number)</li>
-                            </ul>
-                            <p className="text-gray-500 text-xs mt-4 pt-4 border-t border-gray-100 italic">
-                                This data is used solely for the purpose of matching you with potential roommates.
-                            </p>
-                        </div>
-                        <div className="px-6 py-4 bg-gray-50 flex justify-end">
-                            <Button onClick={() => setPrivacyOpen(false)} size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
-                                Understood
-                            </Button>
-                        </div>
-                    </div>
-                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleLogout}
+                  className="text-[var(--text-primary)] hover:text-red-400 hover:bg-red-500/10"
+                  title="Logout"
+                >
+                  <LogOut className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <Link href="/dashboard" className="ml-1">
+                <Button size="sm" className="gap-1.5">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  Find Roommates
+                </Button>
+              </Link>
             )}
-        </>
-    );
+          </nav>
+
+          <div className="md:hidden flex items-center gap-1">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-xl hover:bg-[var(--bg-hover)] text-[var(--text-primary)] hover:text-[var(--accent)] transition-all cursor-pointer"
+            >
+              {theme === "dark" ? (
+                <Sun className="h-4.5 w-4.5" />
+              ) : (
+                <Moon className="h-4.5 w-4.5" />
+              )}
+            </button>
+            <button
+              className="p-2 rounded-xl hover:bg-[var(--bg-hover)] text-[var(--text-primary)] hover:text-[var(--accent)] transition-all cursor-pointer"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <Menu className="h-5 w-5" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-[var(--border-primary)] bg-[var(--header-bg)] backdrop-blur-xl absolute w-full left-0 shadow-[var(--shadow-lg)] animate-slide-down">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col gap-2">
+              {user ? (
+                <div className="flex items-center justify-between p-3 bg-[var(--bg-hover)] rounded-2xl border border-[var(--border-primary)]">
+                  <div className="flex items-center gap-3">
+                    <div className="relative">
+                      <img
+                        src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.username}&backgroundColor=0ea5e9`}
+                        alt="Avatar"
+                        className="h-10 w-10 rounded-full ring-2 ring-[var(--accent)]/30"
+                      />
+                      <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 rounded-full border-2 border-[var(--bg-primary)]" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-semibold text-[var(--text-primary)]">
+                        {user.username}
+                      </span>
+                      <span className="text-xs text-[var(--text-muted)]">
+                        {user.registernumber}
+                      </span>
+                    </div>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => {
+                      handleLogout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="text-[var(--text-primary)] hover:text-red-400"
+                  >
+                    <LogOut className="h-4 w-4" />
+                  </Button>
+                </div>
+              ) : (
+                <Link
+                  href="/dashboard"
+                  className="flex items-center gap-2 text-sm font-medium text-[var(--text-primary)] hover:text-[var(--accent)] p-3 rounded-xl hover:bg-[var(--bg-hover)] transition-all"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Sparkles className="h-4 w-4 text-[var(--accent)]" />
+                  Find Roommates
+                </Link>
+              )}
+              <button
+                onClick={() => {
+                  setPrivacyOpen(true);
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center gap-2 text-sm font-medium text-[var(--text-primary)] hover:text-[var(--accent)] p-3 rounded-xl hover:bg-[var(--bg-hover)] transition-all text-left cursor-pointer"
+              >
+                <ShieldAlert className="h-4 w-4" />
+                Privacy Policy
+              </button>
+            </div>
+          </div>
+        )}
+      </header>
+
+      {privacyOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[var(--overlay-bg)] backdrop-blur-md animate-fade-in">
+          <div className="glass rounded-2xl shadow-[var(--shadow-lg)] w-full max-w-md overflow-hidden animate-fade-up">
+            <div className="px-6 py-4 border-b border-[var(--border-primary)] flex items-center justify-between">
+              <h3 className="text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
+                <div className="p-1.5 rounded-lg bg-[var(--accent-subtle)]">
+                  <ShieldAlert className="h-4 w-4 text-[var(--accent)]" />
+                </div>
+                Privacy Policy
+              </h3>
+              <button
+                onClick={() => setPrivacyOpen(false)}
+                className="text-[var(--text-primary)] hover:text-[var(--accent)] p-1.5 rounded-xl hover:bg-[var(--bg-hover)] transition-all cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="glass-accent rounded-xl p-4 text-sm text-[var(--accent)]">
+                <p className="font-semibold mb-1">We respect your privacy</p>
+                <span className="text-[var(--text-secondary)]">
+                  We do not store your login token.
+                </span>
+              </div>
+              <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
+                We only store essential user information:
+              </p>
+              <ul className="space-y-2 text-sm text-[var(--text-secondary)]">
+                <li className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
+                  <strong className="text-[var(--text-primary)]">Name</strong>{" "}
+                  and{" "}
+                  <strong className="text-[var(--text-primary)]">
+                    Contact Details
+                  </strong>
+                </li>
+                <li className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
+                  <strong className="text-[var(--text-primary)]">
+                    Hostel Details
+                  </strong>{" "}
+                  (Block, Room Number)
+                </li>
+              </ul>
+              <p className="text-[var(--text-muted)] text-xs pt-4 border-t border-[var(--border-primary)] italic">
+                This data is used solely for matching you with potential
+                roommates.
+              </p>
+            </div>
+            <div className="px-6 py-4 border-t border-[var(--border-primary)] flex justify-end">
+              <Button onClick={() => setPrivacyOpen(false)} size="sm">
+                Understood
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
 }
