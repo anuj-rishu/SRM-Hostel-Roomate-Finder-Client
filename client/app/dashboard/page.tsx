@@ -13,6 +13,7 @@ import {
 import { FollowBanner } from "@/components/FollowBanner";
 import { useRouter } from "next/navigation";
 import { roommates, auth } from "@/lib/api";
+import { Button } from "@/components/ui/Button";
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(true);
@@ -123,8 +124,6 @@ export default function Dashboard() {
         </div>
       ) : (
         <>
-        
-
           {data?.roommates && data.roommates.length > 0 ? (
             <div
               className="space-y-6 animate-fade-up"

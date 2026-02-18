@@ -11,15 +11,18 @@ import {
   Sparkles,
   Sun,
   Moon,
+  Fingerprint,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { auth } from "@/lib/api";
 import { useRouter, usePathname } from "next/navigation";
 import { useTheme } from "@/components/ThemeProvider";
+import { PasskeyManager } from "@/components/PasskeyManager";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [privacyOpen, setPrivacyOpen] = useState(false);
+  const [passkeyOpen, setPasskeyOpen] = useState(false);
   const [user, setUser] = useState<{
     username: string;
     registernumber: string;
@@ -109,6 +112,15 @@ export function Header() {
                 <Moon className="h-4 w-4" />
               )}
             </button>
+            {user && (
+              <button
+                onClick={() => setPasskeyOpen(true)}
+                className="p-2.5 rounded-xl hover:bg-[var(--bg-hover)] text-[var(--text-primary)] hover:text-violet-500 transition-all duration-300 cursor-pointer"
+                title="Manage Passkeys"
+              >
+                <Fingerprint className="h-4 w-4" />
+              </button>
+            )}
             {user ? (
               <div className="flex items-center gap-2 ml-1">
                 <div className="flex items-center gap-2.5 bg-[var(--accent-subtle)] px-3 py-1.5 rounded-full border border-[var(--border-accent)]">
@@ -213,6 +225,18 @@ export function Header() {
                   Find Roommates
                 </Link>
               )}
+              {user && (
+                <button
+                  onClick={() => {
+                    setPasskeyOpen(true);
+                    setMobileMenuOpen(false);
+                  }}
+                  className="flex items-center gap-2 text-sm font-medium text-[var(--text-primary)] hover:text-violet-500 p-3 rounded-xl hover:bg-[var(--bg-hover)] transition-all text-left cursor-pointer"
+                >
+                  <Fingerprint className="h-4 w-4" />
+                  Manage Passkeys
+                </button>
+              )}
               <button
                 onClick={() => {
                   setPrivacyOpen(true);
@@ -285,6 +309,10 @@ export function Header() {
           </div>
         </div>
       )}
+      <PasskeyManager
+        isOpen={passkeyOpen}
+        onClose={() => setPasskeyOpen(false)}
+      />
     </>
   );
 }
