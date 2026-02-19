@@ -1,32 +1,35 @@
-import { MapPin, Phone, Mail, User } from "lucide-react";
+import { MapPin, Phone, Mail, User, Lock, Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface RoommateProps {
   name: string;
-  department: string;
-  year: string;
   hostel: string;
-  bio: string;
-  interests: string[];
+  email: string;
+  phone: string;
   imageUrl: string;
+  locked?: boolean;
+  onUnlockClick?: () => void;
 }
 
 export function RoommateCard({
   name,
-  department,
-  year,
   hostel,
-  bio,
-  interests,
+  email,
+  phone,
   imageUrl,
+  locked = false,
+  onUnlockClick,
 }: RoommateProps) {
-  const contactParts = bio.replace("Contact: ", "").split(" | ");
-  const email = contactParts[0] || "";
-  const phone = contactParts[1] || "";
-
   return (
     <div className="group card-premium overflow-hidden relative">
       {/* Top accent bar */}
-      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-sky-500 via-cyan-500 to-teal-500 opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
+      <div
+        className={`absolute top-0 left-0 right-0 h-[2px] transition-opacity duration-500 ${
+          locked
+            ? "bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 opacity-70"
+            : "bg-gradient-to-r from-sky-500 via-cyan-500 to-teal-500 opacity-50 group-hover:opacity-100"
+        }`}
+      />
 
       <div className="p-6">
         {/* Profile header */}
@@ -74,45 +77,89 @@ export function RoommateCard({
 
           {/* Contact */}
           <div className="grid grid-cols-1 gap-1.5">
-            {email && (
-              <a
-                href={`mailto:${email}`}
-                className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[var(--bg-hover)] transition-all duration-300 group/item"
-              >
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-500/10 text-sky-500 border border-sky-500/10 group-hover/item:bg-sky-500 group-hover/item:text-white group-hover/item:shadow-lg group-hover/item:shadow-sky-500/20 transition-all duration-300">
-                  <Mail className="h-3.5 w-3.5" />
+            {locked ? (
+              <div className="space-y-2">
+                {/* Blurred email */}
+                <div className="flex items-center gap-3 p-2.5 rounded-xl bg-[var(--bg-input)] border border-amber-500/10 relative overflow-hidden">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10 text-amber-500 border border-amber-500/10">
+                    <Lock className="h-3.5 w-3.5" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] uppercase font-bold text-[var(--text-muted)] tracking-wider">
+                      Email
+                    </span>
+                    <span className="text-sm font-medium text-amber-500/70 blur-[3px] select-none">
+                      xxxxxxx@srmist.edu.in
+                    </span>
+                  </div>
                 </div>
-                <div className="flex flex-col overflow-hidden">
-                  <span className="text-[10px] uppercase font-bold text-[var(--text-muted)] tracking-wider">
-                    Email
-                  </span>
-                  <span
-                    className="text-sm font-medium text-[var(--text-secondary)] truncate group-hover/item:text-[var(--text-primary)] transition-colors"
-                    title={email}
+                {/* Blurred phone */}
+                <div className="flex items-center gap-3 p-2.5 rounded-xl bg-[var(--bg-input)] border border-amber-500/10 relative overflow-hidden">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10 text-amber-500 border border-amber-500/10">
+                    <Lock className="h-3.5 w-3.5" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[10px] uppercase font-bold text-[var(--text-muted)] tracking-wider">
+                      Phone
+                    </span>
+                    <span className="text-sm font-medium text-amber-500/70 blur-[3px] select-none">
+                      +91 XXXXXXXXXX
+                    </span>
+                  </div>
+                </div>
+                {/* Unlock button */}
+                <Button
+                  onClick={onUnlockClick}
+                  className="w-full mt-1 gap-2 text-xs py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 border-0 shadow-lg shadow-amber-500/15 hover:shadow-amber-500/25 transition-all duration-300"
+                  size="sm"
+                >
+                  <Sparkles className="h-3.5 w-3.5" />
+                  Unlock All Contacts — ₹9 only
+                </Button>
+              </div>
+            ) : (
+              <>
+                {email && email !== "N/A" && (
+                  <a
+                    href={`mailto:${email}`}
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[var(--bg-hover)] transition-all duration-300 group/item"
                   >
-                    {email}
-                  </span>
-                </div>
-              </a>
-            )}
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sky-500/10 text-sky-500 border border-sky-500/10 group-hover/item:bg-sky-500 group-hover/item:text-white group-hover/item:shadow-lg group-hover/item:shadow-sky-500/20 transition-all duration-300">
+                      <Mail className="h-3.5 w-3.5" />
+                    </div>
+                    <div className="flex flex-col overflow-hidden">
+                      <span className="text-[10px] uppercase font-bold text-[var(--text-muted)] tracking-wider">
+                        Email
+                      </span>
+                      <span
+                        className="text-sm font-medium text-[var(--text-secondary)] truncate group-hover/item:text-[var(--text-primary)] transition-colors"
+                        title={email}
+                      >
+                        {email}
+                      </span>
+                    </div>
+                  </a>
+                )}
 
-            {phone && (
-              <a
-                href={`tel:${phone}`}
-                className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[var(--bg-hover)] transition-all duration-300 group/item"
-              >
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-500 border border-emerald-500/10 group-hover/item:bg-emerald-500 group-hover/item:text-white group-hover/item:shadow-lg group-hover/item:shadow-emerald-500/20 transition-all duration-300">
-                  <Phone className="h-3.5 w-3.5" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-[10px] uppercase font-bold text-[var(--text-muted)] tracking-wider">
-                    Phone
-                  </span>
-                  <span className="text-sm font-medium text-[var(--text-secondary)] group-hover/item:text-[var(--text-primary)] transition-colors">
-                    {phone}
-                  </span>
-                </div>
-              </a>
+                {phone && phone !== "N/A" && (
+                  <a
+                    href={`tel:${phone}`}
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[var(--bg-hover)] transition-all duration-300 group/item"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-500 border border-emerald-500/10 group-hover/item:bg-emerald-500 group-hover/item:text-white group-hover/item:shadow-lg group-hover/item:shadow-emerald-500/20 transition-all duration-300">
+                      <Phone className="h-3.5 w-3.5" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-[10px] uppercase font-bold text-[var(--text-muted)] tracking-wider">
+                        Phone
+                      </span>
+                      <span className="text-sm font-medium text-[var(--text-secondary)] group-hover/item:text-[var(--text-primary)] transition-colors">
+                        {phone}
+                      </span>
+                    </div>
+                  </a>
+                )}
+              </>
             )}
           </div>
         </div>

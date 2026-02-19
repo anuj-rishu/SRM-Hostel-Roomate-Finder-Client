@@ -14,17 +14,20 @@ import {
   Fingerprint,
   Scale,
   RefreshCcw,
+  Receipt,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { auth } from "@/lib/api";
 import { useRouter, usePathname } from "next/navigation";
 import { useTheme } from "@/components/ThemeProvider";
 import { PasskeyManager } from "@/components/PasskeyManager";
+import { PaymentInfo } from "@/components/PaymentInfo";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [passkeyOpen, setPasskeyOpen] = useState(false);
+  const [paymentInfoOpen, setPaymentInfoOpen] = useState(false);
   const [user, setUser] = useState<{
     username: string;
     registernumber: string;
@@ -129,13 +132,22 @@ export function Header() {
               )}
             </button>
             {user && (
-              <button
-                onClick={() => setPasskeyOpen(true)}
-                className="p-2.5 rounded-xl hover:bg-[var(--bg-hover)] text-[var(--text-primary)] hover:text-violet-500 transition-all duration-300 cursor-pointer"
-                title="Manage Passkeys"
-              >
-                <Fingerprint className="h-4 w-4" />
-              </button>
+              <>
+                <button
+                  onClick={() => setPasskeyOpen(true)}
+                  className="p-2.5 rounded-xl hover:bg-[var(--bg-hover)] text-[var(--text-primary)] hover:text-violet-500 transition-all duration-300 cursor-pointer"
+                  title="Manage Passkeys"
+                >
+                  <Fingerprint className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => setPaymentInfoOpen(true)}
+                  className="p-2.5 rounded-xl hover:bg-[var(--bg-hover)] text-[var(--text-primary)] hover:text-amber-500 transition-all duration-300 cursor-pointer"
+                  title="Payment Details"
+                >
+                  <Receipt className="h-4 w-4" />
+                </button>
+              </>
             )}
             {user ? (
               <div className="flex items-center gap-2 ml-1">
@@ -242,16 +254,28 @@ export function Header() {
                 </Link>
               )}
               {user && (
-                <button
-                  onClick={() => {
-                    setPasskeyOpen(true);
-                    setMobileMenuOpen(false);
-                  }}
-                  className="flex items-center gap-2 text-sm font-medium text-[var(--text-primary)] hover:text-violet-500 p-3 rounded-xl hover:bg-[var(--bg-hover)] transition-all text-left cursor-pointer"
-                >
-                  <Fingerprint className="h-4 w-4" />
-                  Manage Passkeys
-                </button>
+                <>
+                  <button
+                    onClick={() => {
+                      setPasskeyOpen(true);
+                      setMobileMenuOpen(false);
+                    }}
+                    className="flex items-center gap-2 text-sm font-medium text-[var(--text-primary)] hover:text-violet-500 p-3 rounded-xl hover:bg-[var(--bg-hover)] transition-all text-left cursor-pointer"
+                  >
+                    <Fingerprint className="h-4 w-4" />
+                    Manage Passkeys
+                  </button>
+                  <button
+                    onClick={() => {
+                      setPaymentInfoOpen(true);
+                      setMobileMenuOpen(false);
+                    }}
+                    className="flex items-center gap-2 text-sm font-medium text-[var(--text-primary)] hover:text-amber-500 p-3 rounded-xl hover:bg-[var(--bg-hover)] transition-all text-left cursor-pointer"
+                  >
+                    <Receipt className="h-4 w-4" />
+                    Payment Details
+                  </button>
+                </>
               )}
               <Link
                 href="/terms"
@@ -344,6 +368,10 @@ export function Header() {
       <PasskeyManager
         isOpen={passkeyOpen}
         onClose={() => setPasskeyOpen(false)}
+      />
+      <PaymentInfo
+        isOpen={paymentInfoOpen}
+        onClose={() => setPaymentInfoOpen(false)}
       />
     </>
   );

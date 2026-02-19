@@ -49,4 +49,11 @@ export const roommates = {
   getAll: () => api.get("/roommates"),
 };
 
+export const payment = {
+  createOrder: () => api.post("/payment/create-order"),
+  verifyPayment: (orderId: string) => api.post("/payment/verify", { orderId }),
+  manualVerify: () => api.post("/payment/manual-verify"),
+  getStatus: () => api.get("/payment/status"),
+};
+
 export default api;

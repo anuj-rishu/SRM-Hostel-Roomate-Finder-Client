@@ -197,6 +197,17 @@
   }
 }
 
+@keyframes slide-up-sheet {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes blob-move {
   0%,
   100% {
@@ -312,6 +323,9 @@
   .animate-slide-up {
     animation: slide-up 0.4s ease-out both;
   }
+  .animate-slide-up-sheet {
+    animation: slide-up-sheet 0.35s cubic-bezier(0.32, 0.72, 0, 1) both;
+  }
   .animate-blob {
     animation: blob-move 8s infinite;
   }
@@ -386,5 +400,13 @@
     border-radius: 50%;
     filter: blur(80px);
     pointer-events: none;
+  }
+
+  .payment-modal-card {
+    background: var(--bg-card-solid);
+    border: 1px solid var(--border-secondary);
+    box-shadow:
+      0 24px 80px -12px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
   }
 }
