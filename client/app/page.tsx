@@ -25,7 +25,7 @@ export default function Home() {
 
   useEffect(() => {
     const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
     if (token) {
       router.push("/dashboard");
     }
@@ -189,8 +189,8 @@ function LoginForm() {
       });
 
       if (res.data.success) {
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem(
+        sessionStorage.setItem("token", res.data.token);
+        sessionStorage.setItem(
           "user",
           JSON.stringify({
             username: res.data.username,
@@ -426,8 +426,8 @@ function PasskeyLoginButton() {
       });
 
       if (res.data.success) {
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem(
+        sessionStorage.setItem("token", res.data.token);
+        sessionStorage.setItem(
           "user",
           JSON.stringify({
             username: res.data.username,

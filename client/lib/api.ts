@@ -12,7 +12,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }
@@ -23,13 +23,24 @@ api.interceptors.request.use(
   },
 );
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401 && typeof window !== "undefined") {
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("user");
+    }
+    return Promise.reject(error);
+  },
+);
+
 export const auth = {
   getCaptcha: () => api.get("/captcha"),
   login: (credentials: any) => api.post("/login", credentials),
   logout: () => {
     if (typeof window !== "undefined") {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("user");
     }
   },
 };

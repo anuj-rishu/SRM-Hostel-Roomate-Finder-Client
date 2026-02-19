@@ -38,7 +38,7 @@ export function Header() {
   const pathname = usePathname();
 
   const checkUser = useCallback(() => {
-    const savedUser = localStorage.getItem("user");
+    const savedUser = sessionStorage.getItem("user");
     if (savedUser) {
       try {
         setUser(JSON.parse(savedUser));
