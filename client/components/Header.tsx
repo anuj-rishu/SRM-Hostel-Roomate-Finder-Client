@@ -12,6 +12,8 @@ import {
   Sun,
   Moon,
   Fingerprint,
+  Scale,
+  RefreshCcw,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { auth } from "@/lib/api";
@@ -94,6 +96,20 @@ export function Header() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-1.5">
+            <Link
+              href="/terms"
+              className="text-sm font-medium text-[var(--text-primary)] hover:text-[var(--accent)] px-3 py-2 rounded-xl hover:bg-[var(--bg-hover)] transition-all duration-300 flex items-center gap-1.5 cursor-pointer"
+            >
+              <Scale className="h-3.5 w-3.5" />
+              Terms
+            </Link>
+            <Link
+              href="/refund"
+              className="text-sm font-medium text-[var(--text-primary)] hover:text-[var(--accent)] px-3 py-2 rounded-xl hover:bg-[var(--bg-hover)] transition-all duration-300 flex items-center gap-1.5 cursor-pointer"
+            >
+              <RefreshCcw className="h-3.5 w-3.5" />
+              Refunds
+            </Link>
             <button
               onClick={() => setPrivacyOpen(true)}
               className="text-sm font-medium text-[var(--text-primary)] hover:text-[var(--accent)] px-3 py-2 rounded-xl hover:bg-[var(--bg-hover)] transition-all duration-300 flex items-center gap-1.5 cursor-pointer"
@@ -237,6 +253,22 @@ export function Header() {
                   Manage Passkeys
                 </button>
               )}
+              <Link
+                href="/terms"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2 text-sm font-medium text-[var(--text-primary)] hover:text-[var(--accent)] p-3 rounded-xl hover:bg-[var(--bg-hover)] transition-all text-left cursor-pointer"
+              >
+                <Scale className="h-4 w-4" />
+                Terms & Conditions
+              </Link>
+              <Link
+                href="/refund"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2 text-sm font-medium text-[var(--text-primary)] hover:text-[var(--accent)] p-3 rounded-xl hover:bg-[var(--bg-hover)] transition-all text-left cursor-pointer"
+              >
+                <RefreshCcw className="h-4 w-4" />
+                Cancellation & Refund
+              </Link>
               <button
                 onClick={() => {
                   setPrivacyOpen(true);
