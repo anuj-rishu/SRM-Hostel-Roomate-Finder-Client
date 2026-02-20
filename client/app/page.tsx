@@ -352,7 +352,12 @@ function LoginForm() {
 
       <p className="text-center text-xs text-[var(--text-muted)] pt-1">
         By signing in, you agree to our{" "}
-        <span className="text-[var(--accent)] font-medium">Privacy Policy</span>
+        <a
+          href="/privacy"
+          className="text-[var(--accent)] font-medium hover:underline"
+        >
+          Privacy Policy
+        </a>
         .
       </p>
     </form>

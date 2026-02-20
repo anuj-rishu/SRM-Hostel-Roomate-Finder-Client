@@ -93,14 +93,6 @@ export default function RefundPage() {
             </ul>
           </div>
         </div>
-
-        {/* Footer Note */}
-        <div className="flex justify-center animate-fade-up animation-delay-2000">
-          <div className="flex items-center gap-2 text-[var(--text-muted)] text-sm px-4 py-2 rounded-full border border-[var(--border-primary)] bg-[var(--bg-card)]">
-            <ShieldCheck className="h-4 w-4 text-[var(--success)]" />
-            <span>By using SRM ROOMIE, you agree to these policies.</span>
-          </div>
-        </div>
       </div>
     </div>
   );

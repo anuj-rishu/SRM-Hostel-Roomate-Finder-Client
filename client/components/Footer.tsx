@@ -1,4 +1,4 @@
-import { Instagram, Linkedin, Heart, Mail } from "lucide-react";
+import { Instagram, Linkedin, Heart, Mail, MessageSquare } from "lucide-react";
 import Link from "next/link";
 
 export function Footer() {
@@ -6,14 +6,23 @@ export function Footer() {
     <footer className="w-full border-t border-[var(--border-primary)] bg-[var(--header-bg)] backdrop-blur-xl py-5 mt-auto relative z-10 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-sm font-medium text-[var(--text-primary)] flex items-center gap-1.5 order-2 sm:order-1">
-            Crafted with
-            <Heart className="h-3.5 w-3.5 text-red-400 fill-red-400 animate-pulse" />
-            by
-            <span className="font-bold text-gradient">
-              SRM Insider Community
-            </span>
-          </p>
+          <div className="flex flex-col sm:flex-row items-center gap-3 order-2 sm:order-1">
+            <p className="text-sm font-medium text-[var(--text-primary)] flex items-center gap-1.5">
+              Crafted with
+              <Heart className="h-3.5 w-3.5 text-red-400 fill-red-400 animate-pulse" />
+              by
+              <span className="font-bold text-gradient">
+                SRM Insider Community
+              </span>
+            </p>
+            <Link
+              href="/contact"
+              className="flex items-center gap-1.5 text-xs font-medium text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors duration-200"
+            >
+              <MessageSquare className="h-3.5 w-3.5" />
+              Contact Us
+            </Link>
+          </div>
           <div className="flex items-center gap-2.5 order-1 sm:order-2">
             <SocialLink
               href="https://www.instagram.com/srm.insider/"

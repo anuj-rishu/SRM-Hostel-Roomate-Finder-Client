@@ -15,6 +15,7 @@ import {
   Scale,
   RefreshCcw,
   Receipt,
+  MessageSquare,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { auth } from "@/lib/api";
@@ -25,7 +26,6 @@ import { PaymentInfo } from "@/components/PaymentInfo";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [privacyOpen, setPrivacyOpen] = useState(false);
   const [passkeyOpen, setPasskeyOpen] = useState(false);
   const [paymentInfoOpen, setPaymentInfoOpen] = useState(false);
   const [user, setUser] = useState<{
@@ -113,13 +113,20 @@ export function Header() {
               <RefreshCcw className="h-3.5 w-3.5" />
               Refunds
             </Link>
-            <button
-              onClick={() => setPrivacyOpen(true)}
+            <Link
+              href="/contact"
+              className="text-sm font-medium text-[var(--text-primary)] hover:text-[var(--accent)] px-3 py-2 rounded-xl hover:bg-[var(--bg-hover)] transition-all duration-300 flex items-center gap-1.5 cursor-pointer"
+            >
+              <MessageSquare className="h-3.5 w-3.5" />
+              Contact Us
+            </Link>
+            <Link
+              href="/privacy"
               className="text-sm font-medium text-[var(--text-primary)] hover:text-[var(--accent)] px-3 py-2 rounded-xl hover:bg-[var(--bg-hover)] transition-all duration-300 flex items-center gap-1.5 cursor-pointer"
             >
               <ShieldAlert className="h-3.5 w-3.5" />
               Privacy
-            </button>
+            </Link>
             <button
               onClick={toggleTheme}
               className="p-2.5 rounded-xl hover:bg-[var(--bg-hover)] text-[var(--text-primary)] hover:text-[var(--accent)] transition-all duration-300 cursor-pointer"
@@ -293,78 +300,27 @@ export function Header() {
                 <RefreshCcw className="h-4 w-4" />
                 Cancellation & Refund
               </Link>
-              <button
-                onClick={() => {
-                  setPrivacyOpen(true);
-                  setMobileMenuOpen(false);
-                }}
+              <Link
+                href="/contact"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2 text-sm font-medium text-[var(--text-primary)] hover:text-[var(--accent)] p-3 rounded-xl hover:bg-[var(--bg-hover)] transition-all text-left cursor-pointer"
+              >
+                <MessageSquare className="h-4 w-4" />
+                Contact Us
+              </Link>
+              <Link
+                href="/privacy"
+                onClick={() => setMobileMenuOpen(false)}
                 className="flex items-center gap-2 text-sm font-medium text-[var(--text-primary)] hover:text-[var(--accent)] p-3 rounded-xl hover:bg-[var(--bg-hover)] transition-all text-left cursor-pointer"
               >
                 <ShieldAlert className="h-4 w-4" />
                 Privacy Policy
-              </button>
+              </Link>
             </div>
           </div>
         )}
       </header>
 
-      {privacyOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[var(--overlay-bg)] backdrop-blur-md animate-fade-in">
-          <div className="glass rounded-2xl shadow-[var(--shadow-lg)] w-full max-w-md overflow-hidden animate-fade-up">
-            <div className="px-6 py-4 border-b border-[var(--border-primary)] flex items-center justify-between">
-              <h3 className="text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
-                <div className="p-1.5 rounded-lg bg-[var(--accent-subtle)]">
-                  <ShieldAlert className="h-4 w-4 text-[var(--accent)]" />
-                </div>
-                Privacy Policy
-              </h3>
-              <button
-                onClick={() => setPrivacyOpen(false)}
-                className="text-[var(--text-primary)] hover:text-[var(--accent)] p-1.5 rounded-xl hover:bg-[var(--bg-hover)] transition-all cursor-pointer"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-            <div className="p-6 space-y-4">
-              <div className="glass-accent rounded-xl p-4 text-sm text-[var(--accent)]">
-                <p className="font-semibold mb-1">We respect your privacy</p>
-                <span className="text-[var(--text-secondary)]">
-                  We do not store your login token.
-                </span>
-              </div>
-              <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
-                We only store essential user information:
-              </p>
-              <ul className="space-y-2 text-sm text-[var(--text-secondary)]">
-                <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
-                  <strong className="text-[var(--text-primary)]">Name</strong>{" "}
-                  and{" "}
-                  <strong className="text-[var(--text-primary)]">
-                    Contact Details
-                  </strong>
-                </li>
-                <li className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
-                  <strong className="text-[var(--text-primary)]">
-                    Hostel Details
-                  </strong>{" "}
-                  (Block, Room Number)
-                </li>
-              </ul>
-              <p className="text-[var(--text-muted)] text-xs pt-4 border-t border-[var(--border-primary)] italic">
-                This data is used solely for matching you with potential
-                roommates.
-              </p>
-            </div>
-            <div className="px-6 py-4 border-t border-[var(--border-primary)] flex justify-end">
-              <Button onClick={() => setPrivacyOpen(false)} size="sm">
-                Understood
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
       <PasskeyManager
         isOpen={passkeyOpen}
         onClose={() => setPasskeyOpen(false)}
