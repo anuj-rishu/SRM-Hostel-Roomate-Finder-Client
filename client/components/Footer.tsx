@@ -1,4 +1,4 @@
-import { Instagram, Linkedin, Heart, Mail, MessageSquare } from "lucide-react";
+import { Instagram, Linkedin, Heart, Mail } from "lucide-react";
 import Link from "next/link";
 
 export function Footer() {
@@ -15,13 +15,6 @@ export function Footer() {
                 SRM Insider Community
               </span>
             </p>
-            <Link
-              href="/contact"
-              className="flex items-center gap-1.5 text-xs font-medium text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors duration-200"
-            >
-              <MessageSquare className="h-3.5 w-3.5" />
-              Contact Us
-            </Link>
           </div>
           <div className="flex items-center gap-2.5 order-1 sm:order-2">
             <SocialLink
