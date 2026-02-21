@@ -83,8 +83,13 @@ function DashboardContent() {
   }, [router]);
 
   useEffect(() => {
+    const user = sessionStorage.getItem("user");
+    if (!user) {
+      router.push("/");
+      return;
+    }
     fetchData();
-  }, [fetchData]);
+  }, [fetchData, router]);
 
   useEffect(() => {
     const orderId = searchParams.get("order_id");
