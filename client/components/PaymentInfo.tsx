@@ -39,6 +39,7 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
   );
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const fetchStatus = useCallback(async () => {
     setLoading(true);
@@ -61,6 +62,16 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
       fetchStatus();
       setMessage("");
       document.body.style.overflow = "hidden";
+
+      const savedUser = sessionStorage.getItem("user");
+      if (savedUser) {
+        try {
+          const user = JSON.parse(savedUser);
+          setIsAdmin(!!user.isAdmin);
+        } catch (e) {
+          console.error("Failed to parse user", e);
+        }
+      }
     } else {
       document.body.style.overflow = "";
     }
@@ -150,6 +161,26 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
                 <p className="text-sm text-[var(--text-muted)]">
                   Loading payment info...
                 </p>
+              </div>
+            ) : isAdmin ? (
+              /* ── Admin state ── */
+              <div className="space-y-6 py-4">
+                <div className="flex items-center justify-center">
+                  <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-amber-500/10 border border-amber-500/30 shadow-sm animate-fade-up">
+                    <Sparkles className="h-4.5 w-4.5 text-amber-500" />
+                    <span className="text-sm font-black text-amber-500 uppercase tracking-wider">
+                      Premium Access Active
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-6 rounded-2xl bg-gradient-to-br from-[var(--bg-input)] to-[var(--bg-hover)] border border-amber-500/20 text-center shadow-[0_0_20px_-5px_rgba(245,158,11,0.15)] relative overflow-hidden animate-fade-up animation-delay-150">
+                  <div className="absolute top-0 right-0 -mr-12 -mt-12 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
+                  <div className="absolute bottom-0 left-0 -ml-12 -mb-12 w-32 h-32 bg-rose-500/10 rounded-full blur-2xl pointer-events-none" />
+                  <p className="text-[15px] sm:text-base text-[var(--text-secondary)] font-medium leading-relaxed relative z-10 max-w-[250px] sm:max-w-xs mx-auto">
+                    You have free access of all SIC services as a core member.
+                  </p>
+                </div>
               </div>
             ) : hasPaid && paidPayment ? (
               /* ── Active state ── */
