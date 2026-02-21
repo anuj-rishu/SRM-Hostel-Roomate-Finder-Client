@@ -195,6 +195,7 @@ function LoginForm() {
           JSON.stringify({
             username: res.data.username,
             registernumber: res.data.registernumber,
+            isAdmin: res.data.isAdmin,
           }),
         );
         window.dispatchEvent(new Event("user-login"));
@@ -437,6 +438,7 @@ function PasskeyLoginButton() {
           JSON.stringify({
             username: res.data.username,
             registernumber: res.data.registernumber,
+            isAdmin: res.data.isAdmin,
           }),
         );
         window.dispatchEvent(new Event("user-login"));

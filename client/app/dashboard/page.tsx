@@ -11,6 +11,7 @@ import {
   Calendar,
   UserSearch,
   Inbox,
+  Sparkles,
 } from "lucide-react";
 import { FollowBanner } from "@/components/FollowBanner";
 import { useRouter } from "next/navigation";
@@ -28,6 +29,7 @@ interface DashboardData {
   myRoom: any;
   roommates: RoommateData[];
   hasPaid: boolean;
+  isAdmin?: boolean;
 }
 
 export default function Dashboard() {
@@ -182,6 +184,24 @@ function DashboardContent() {
               )}
             </div>
           </div>
+          {data?.isAdmin && (
+            <div className="mt-6 p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-rose-500/10 border border-amber-500/20 flex items-center gap-3 animate-fade-up">
+              <div className="relative">
+                <div className="absolute inset-0 bg-amber-500/20 rounded-xl blur-md" />
+                <div className="relative p-2 rounded-xl bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 shadow-lg">
+                  <Sparkles className="h-4 w-4 text-white" />
+                </div>
+              </div>
+              <div>
+                <p className="text-sm font-bold text-amber-500">
+                  Premium Access Active
+                </p>
+                <p className="text-xs text-[var(--text-muted)]">
+                  You have free access of all SIC services as a core member.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
         {error ? (

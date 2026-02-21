@@ -32,6 +32,7 @@ export function Header() {
   const [user, setUser] = useState<{
     username: string;
     registernumber: string;
+    isAdmin?: boolean;
   } | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const { theme, toggleTheme } = useTheme();
@@ -100,13 +101,6 @@ export function Header() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-1.5">
-            <Link
-              href="/pricing"
-              className="text-sm font-bold text-amber-400 hover:text-amber-300 px-3 py-2 rounded-xl hover:bg-amber-500/10 transition-all duration-300 flex items-center gap-1.5 cursor-pointer border border-amber-500/20 hover:border-amber-500/40"
-            >
-              <Crown className="h-3.5 w-3.5" />
-              Premium
-            </Link>
             <Link
               href="/terms"
               className="text-sm font-medium text-[var(--text-primary)] hover:text-[var(--accent)] px-3 py-2 rounded-xl hover:bg-[var(--bg-hover)] transition-all duration-300 flex items-center gap-1.5 cursor-pointer"
@@ -178,6 +172,9 @@ export function Header() {
                   <span className="text-sm font-medium text-[var(--text-primary)] max-w-[100px] truncate">
                     {user.username.split(" ")[0]}
                   </span>
+                  {user.isAdmin && (
+                    <Sparkles className="h-3 w-3 text-amber-500 fill-amber-500" />
+                  )}
                 </div>
                 <Button
                   variant="ghost"
@@ -292,14 +289,7 @@ export function Header() {
                   </button>
                 </>
               )}
-              <Link
-                href="/pricing"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-2 text-sm font-bold text-amber-400 hover:text-amber-300 p-3 rounded-xl hover:bg-amber-500/10 transition-all text-left cursor-pointer border border-amber-500/20"
-              >
-                <Crown className="h-4 w-4" />
-                Premium Plans
-              </Link>
+
               <Link
                 href="/terms"
                 onClick={() => setMobileMenuOpen(false)}
