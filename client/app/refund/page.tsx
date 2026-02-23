@@ -41,7 +41,7 @@ export default function RefundPage() {
           <div className="prose prose-invert max-w-none text-[var(--text-secondary)] leading-relaxed">
             <p className="mb-4">
               <strong className="text-[var(--text-primary)]">
-                SRM INSIDER COMMUNITY
+                ANUJ TIWARI
               </strong>{" "}
               believes in helping its customers as far as possible, and has
               therefore a liberal cancellation policy. Under this policy:
@@ -57,7 +57,7 @@ export default function RefundPage() {
               </li>
               <li>
                 <strong className="text-[var(--text-primary)]">
-                  SRM INSIDER COMMUNITY
+                  ANUJ TIWARI
                 </strong>{" "}
                 does not accept cancellation requests for perishable items like
                 flowers, eatables etc. However, refund/replacement can be made
@@ -84,7 +84,7 @@ export default function RefundPage() {
                 warranty from manufacturers, please refer the issue to them. In
                 case of any Refunds approved by{" "}
                 <strong className="text-[var(--text-primary)]">
-                  SRM INSIDER COMMUNITY
+                  ANUJ TIWARI
                 </strong>
                 , it’ll take{" "}
                 <strong className="text-[var(--text-primary)]">6-8 Days</strong>{" "}

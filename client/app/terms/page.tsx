@@ -43,7 +43,7 @@ export default function TermsPage() {
               These Terms and Conditions, along with privacy policy or other
               terms (“Terms”) constitute a binding agreement by and between{" "}
               <strong className="text-[var(--text-primary)]">
-                SRM INSIDER COMMUNITY
+                ANUJ TIWARI
               </strong>
               , ( “Website Owner” or “we” or “us” or “our”) and you (“you” or
               “your”) and relate to your use of our website, goods (as
