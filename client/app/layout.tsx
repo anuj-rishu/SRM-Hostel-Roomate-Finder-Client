@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -35,6 +36,9 @@ export const metadata: Metadata = {
     siteName: "SRM ROOMIE",
     type: "website",
   },
+  other: {
+    "google-adsense-account": "ca-pub-9391004376397816",
+  },
 };
 
 const jsonLd = {
@@ -60,6 +64,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" data-theme="dark" suppressHydrationWarning>
+      <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID || "G-8P87N5679V"} />
       <head>
         <meta
           name="viewport"
