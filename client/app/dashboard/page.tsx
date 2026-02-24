@@ -60,17 +60,26 @@ function DashboardContent() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<DashboardData | null>(null);
   const [error, setError] = useState("");
+  const [price, setPrice] = useState<number>(19);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const fetchData = useCallback(async () => {
     try {
-      const res = await roommates.getAll();
-      if (res.data.success) {
-        setData(res.data);
+      const [roommatesRes, configRes] = await Promise.all([
+        roommates.getAll(),
+        payment.getConfig().catch(() => ({ data: { success: false } })),
+      ]);
+
+      if (roommatesRes.data.success) {
+        setData(roommatesRes.data);
       } else {
-        setError(res.data.message || "Failed to fetch data");
+        setError(roommatesRes.data.message || "Failed to fetch data");
+      }
+
+      if (configRes.data.success) {
+        setPrice(configRes.data.amount);
       }
     } catch (err: any) {
       console.error("My Room error", err);
@@ -250,6 +259,7 @@ function DashboardContent() {
                         phone={student.phone}
                         imageUrl={`https://api.dicebear.com/7.x/initials/svg?seed=${student.registerNo}&backgroundColor=0ea5e9`}
                         locked={!data.hasPaid}
+                        price={price}
                         onUnlockClick={() => setPaymentModalOpen(true)}
                       />
                     </div>

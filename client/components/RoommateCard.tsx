@@ -8,6 +8,7 @@ interface RoommateProps {
   phone: string;
   imageUrl: string;
   locked?: boolean;
+  price?: number;
   onUnlockClick?: () => void;
 }
 
@@ -18,6 +19,7 @@ export function RoommateCard({
   phone,
   imageUrl,
   locked = false,
+  price,
   onUnlockClick,
 }: RoommateProps) {
   return (
@@ -114,7 +116,7 @@ export function RoommateCard({
                   size="sm"
                 >
                   <Sparkles className="h-3.5 w-3.5" />
-                  Unlock All Contacts — ₹19 only
+                  Unlock All Contacts — ₹{price || 19} only
                 </Button>
               </div>
             ) : (

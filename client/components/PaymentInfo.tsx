@@ -39,17 +39,26 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
   );
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [price, setPrice] = useState<number>(19);
   const [isAdmin, setIsAdmin] = useState(false);
 
   const fetchStatus = useCallback(async () => {
     setLoading(true);
     setError("");
     try {
-      const res = await payment.getStatus();
-      const data = res.data;
+      const [statusRes, configRes] = await Promise.all([
+        payment.getStatus(),
+        payment.getConfig().catch(() => ({ data: { success: false } })),
+      ]);
+
+      const data = statusRes.data;
       setHasPaid(data.hasPaid);
       setPaidPayment(data.payment);
       setPendingPayment(data.pendingPayment);
+
+      if (configRes.data.success) {
+        setPrice(configRes.data.amount);
+      }
     } catch {
       setError("Failed to load payment info.");
     } finally {
@@ -257,8 +266,8 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
                 <div className="p-3 rounded-xl bg-red-500/5 border border-red-500/15">
                   <p className="text-xs text-red-400 text-center leading-relaxed">
                     <AlertCircle className="h-3 w-3 inline mr-1" />
-                    Your access has expired. Pay ₹19 again from the dashboard to
-                    re-unlock contacts.
+                    Your access has expired. Pay ₹{price} again from the
+                    dashboard to re-unlock contacts.
                   </p>
                 </div>
               </div>

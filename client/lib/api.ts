@@ -65,6 +65,7 @@ export const payment = {
   verifyPayment: (orderId: string) => api.post("/payment/verify", { orderId }),
   manualVerify: () => api.post("/payment/manual-verify"),
   getStatus: () => api.get("/payment/status"),
+  getConfig: () => api.get("/payment/config"),
 };
 
 export default api;
