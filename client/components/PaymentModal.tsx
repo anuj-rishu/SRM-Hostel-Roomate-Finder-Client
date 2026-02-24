@@ -149,7 +149,7 @@ export function PaymentModal({
                   Unlock Roommate Details
                 </h3>
                 <p className="text-[10px] sm:text-xs text-[var(--text-muted)]">
-                  ₹9 · all roommates · 8 months
+                  ₹19 · all roommates · 8 months
                 </p>
               </div>
             </div>
@@ -204,7 +204,7 @@ export function PaymentModal({
               <div className="flex items-center justify-center gap-0.5 mt-1 sm:mt-1.5 mb-0.5">
                 <IndianRupee className="h-5 w-5 sm:h-7 sm:w-7 text-amber-500" />
                 <span className="text-4xl sm:text-5xl font-extrabold text-[var(--text-primary)] tracking-tight">
-                  9
+                  19
                 </span>
               </div>
               <p className="text-[10px] sm:text-xs text-[var(--text-muted)] font-medium">
@@ -249,7 +249,7 @@ export function PaymentModal({
             ) : (
               <>
                 <CreditCard className="h-4 w-4" />
-                Pay ₹9 & Unlock Now
+                Pay ₹19 & Unlock Now
                 <Sparkles className="h-4 w-4" />
               </>
             )}

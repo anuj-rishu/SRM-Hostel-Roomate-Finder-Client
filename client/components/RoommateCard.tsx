@@ -114,7 +114,7 @@ export function RoommateCard({
                   size="sm"
                 >
                   <Sparkles className="h-3.5 w-3.5" />
-                  Unlock All Contacts — ₹9 only
+                  Unlock All Contacts — ₹19 only
                 </Button>
               </div>
             ) : (

@@ -257,7 +257,7 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
                 <div className="p-3 rounded-xl bg-red-500/5 border border-red-500/15">
                   <p className="text-xs text-red-400 text-center leading-relaxed">
                     <AlertCircle className="h-3 w-3 inline mr-1" />
-                    Your access has expired. Pay ₹9 again from the dashboard to
+                    Your access has expired. Pay ₹19 again from the dashboard to
                     re-unlock contacts.
                   </p>
                 </div>
