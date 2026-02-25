@@ -142,11 +142,11 @@ export function PaymentModal({
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-md animate-fade-in"
+      className="fixed inset-0 z-[1000] flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-md animate-fade-in"
       onClick={onClose}
     >
       <div
-        className="payment-modal-card w-full sm:max-w-[460px] rounded-t-2xl sm:rounded-2xl overflow-hidden animate-slide-up-sheet sm:animate-fade-up max-h-[80vh] sm:max-h-[80vh] flex flex-col"
+        className="payment-modal-card w-full sm:max-w-[460px] rounded-t-2xl sm:rounded-2xl overflow-hidden animate-slide-up-sheet sm:animate-fade-up max-h-[85vh] sm:max-h-[80vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Mobile drag handle */}
@@ -252,7 +252,7 @@ export function PaymentModal({
         </div>
 
         {/* Footer */}
-        <div className="flex-shrink-0 px-4 sm:px-6 py-2.5 sm:py-3 border-t border-[var(--border-primary)] space-y-2 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:pb-3">
+        <div className="flex-shrink-0 px-4 sm:px-6 py-3 sm:py-4 border-t border-[var(--border-primary)] space-y-2.5 bg-[var(--bg-card-solid)] pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:pb-4">
           <Button
             onClick={handlePayment}
             disabled={loading}

@@ -95,7 +95,7 @@ export default function RootLayout({
             />
           </div>
           <Header />
-          <main className="flex-1 flex flex-col relative z-10">{children}</main>
+          <main className="flex-1 flex flex-col relative z-20">{children}</main>
           <Footer />
           <script
             type="application/ld+json"

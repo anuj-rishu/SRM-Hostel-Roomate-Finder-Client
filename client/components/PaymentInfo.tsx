@@ -124,7 +124,7 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-md animate-fade-in"
+      className="fixed inset-0 z-[1000] flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-md animate-fade-in"
       onClick={onClose}
     >
       <div
@@ -372,7 +372,7 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
         </div>
 
         {/* Footer */}
-        <div className="flex-shrink-0 px-5 sm:px-6 py-3 sm:py-4 border-t border-[var(--border-primary)] pb-[calc(0.75rem+env(safe-area-inset-bottom))] sm:pb-4">
+        <div className="flex-shrink-0 px-5 sm:px-6 py-4 sm:py-5 border-t border-[var(--border-primary)] bg-[var(--bg-card-solid)] pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:pb-5">
           <Button
             onClick={onClose}
             variant="ghost"

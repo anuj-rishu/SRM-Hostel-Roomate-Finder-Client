@@ -142,7 +142,7 @@ export function PasskeyManager({ isOpen, onClose }: PasskeyManagerProps) {
   const hasPasskey = passkeys.length > 0;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[var(--overlay-bg)] backdrop-blur-md animate-fade-in">
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-[var(--overlay-bg)] backdrop-blur-md animate-fade-in">
       <div className="glass rounded-2xl shadow-[var(--shadow-lg)] w-full max-w-lg overflow-hidden animate-fade-up border border-[var(--border-primary)]">
         <div className="px-6 py-4 border-b border-[var(--border-primary)] flex items-center justify-between">
           <div className="flex items-center gap-3">
