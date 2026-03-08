@@ -139,7 +139,8 @@ function FeaturePill({ icon, text }: { icon: React.ReactNode; text: string }) {
 function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [captchaData, setCaptchaData] = useState<{
-    captcha: string;
+    captchaText?: string;
+    captchaUrl?: string;
     token: string;
   } | null>(null);
   const [showPassword, setShowPassword] = useState(false);
@@ -158,7 +159,13 @@ function LoginForm() {
   const fetchCaptcha = async () => {
     try {
       const res = await auth.getCaptcha();
-      if (res.data.success) setCaptchaData(res.data);
+      if (res.data.success) {
+        setCaptchaData({
+          captchaText: res.data.captchaText || undefined,
+          captchaUrl: res.data.captchaUrl || undefined,
+          token: res.data.token,
+        });
+      }
     } catch (err) {
       console.error("Failed to fetch captcha", err);
     }
@@ -284,13 +291,21 @@ function LoginForm() {
             Captcha
           </label>
           <div className="flex gap-2 items-center">
-            <div className="bg-white rounded-lg p-1 h-10 w-[90px] flex items-center justify-center overflow-hidden border border-[var(--border-primary)] shadow-inner flex-shrink-0">
-              <img
-                src={captchaData.captcha}
-                alt="Captcha"
-                className="h-full w-full object-contain"
-              />
-            </div>
+            {captchaData.captchaUrl ? (
+              <div className="bg-white rounded-lg p-1 h-10 w-[90px] flex items-center justify-center overflow-hidden border border-[var(--border-primary)] shadow-inner flex-shrink-0">
+                <img
+                  src={captchaData.captchaUrl}
+                  alt="Captcha"
+                  className="h-full w-full object-contain"
+                />
+              </div>
+            ) : captchaData.captchaText ? (
+              <div className="bg-white rounded-lg h-10 px-3 flex items-center justify-center border border-[var(--border-primary)] shadow-inner flex-shrink-0">
+                <span className="font-mono font-bold text-lg tracking-[0.25em] text-gray-800 select-none">
+                  {captchaData.captchaText}
+                </span>
+              </div>
+            ) : null}
             <Button
               type="button"
               variant="outline"
@@ -369,7 +384,8 @@ function PasskeyLoginButton() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [captchaData, setCaptchaData] = useState<{
-    captcha: string;
+    captchaText?: string;
+    captchaUrl?: string;
     passkeyToken: string;
   } | null>(null);
   const [captchaInput, setCaptchaInput] = useState("");
@@ -399,7 +415,8 @@ function PasskeyLoginButton() {
 
       if (verifyRes.data.success && verifyRes.data.requiresCaptcha) {
         setCaptchaData({
-          captcha: verifyRes.data.captcha,
+          captchaText: verifyRes.data.captchaText || undefined,
+          captchaUrl: verifyRes.data.captchaUrl || undefined,
           passkeyToken: verifyRes.data.passkeyToken,
         });
       }
@@ -478,11 +495,19 @@ function PasskeyLoginButton() {
             Passkey verified! Solve captcha to continue
           </div>
           <div className="flex items-center justify-center">
-            <img
-              src={captchaData.captcha}
-              alt="Captcha"
-              className="rounded-lg border border-[var(--border-primary)] h-12"
-            />
+            {captchaData.captchaUrl ? (
+              <img
+                src={captchaData.captchaUrl}
+                alt="Captcha"
+                className="rounded-lg border border-[var(--border-primary)] h-12"
+              />
+            ) : captchaData.captchaText ? (
+              <div className="rounded-lg border border-[var(--border-primary)] bg-white h-12 px-4 flex items-center justify-center">
+                <span className="font-mono font-bold text-xl tracking-[0.25em] text-gray-800 select-none">
+                  {captchaData.captchaText}
+                </span>
+              </div>
+            ) : null}
           </div>
           <input
             type="text"
