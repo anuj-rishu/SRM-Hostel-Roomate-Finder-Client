@@ -1,6 +1,15 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const FALLBACK_API_URL =
+  process.env.NEXT_PUBLIC_FALLBACK_API_URL ||
+  "https://kdgj5icx4u5ytmrzpcpyddecne0xmdgm.lambda-url.us-east-1.on.aws/api";
+
+declare module "axios" {
+  interface InternalAxiosRequestConfig {
+    _retried?: boolean;
+  }
+}
 
 const api = axios.create({
   baseURL: API_URL,
@@ -25,11 +34,44 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
+    const originalRequest: AxiosRequestConfig & { _retried?: boolean } =
+      error.config;
+
+    // Handle 401 – clear session
     if (error.response?.status === 401 && typeof window !== "undefined") {
       sessionStorage.removeItem("token");
       sessionStorage.removeItem("user");
     }
+
+    // Fallback: retry once against the backup API on network errors, 403, or 5xx
+    const isNetworkError = !error.response;
+    const isForbidden = error.response?.status === 403;
+    const isServerError =
+      error.response?.status >= 500 && error.response?.status <= 599;
+
+    if ((isNetworkError || isForbidden || isServerError) && !originalRequest._retried) {
+      originalRequest._retried = true;
+      originalRequest.baseURL = FALLBACK_API_URL;
+
+      const token =
+        typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
+
+      const fallbackInstance = axios.create({
+        baseURL: FALLBACK_API_URL,
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+      });
+
+      try {
+        return await fallbackInstance(originalRequest);
+      } catch (fallbackError) {
+        return Promise.reject(fallbackError);
+      }
+    }
+
     return Promise.reject(error);
   },
 );
