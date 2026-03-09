@@ -138,6 +138,7 @@ function FeaturePill({ icon, text }: { icon: React.ReactNode; text: string }) {
 
 function LoginForm() {
   const [loading, setLoading] = useState(false);
+  const [captchaLoading, setCaptchaLoading] = useState(true);
   const [captchaData, setCaptchaData] = useState<{
     captchaText?: string;
     captchaUrl?: string;
@@ -157,6 +158,7 @@ function LoginForm() {
   }, []);
 
   const fetchCaptcha = async () => {
+    setCaptchaLoading(true);
     try {
       const res = await auth.getCaptcha();
       if (res.data.success) {
@@ -168,6 +170,8 @@ function LoginForm() {
       }
     } catch (err) {
       console.error("Failed to fetch captcha", err);
+    } finally {
+      setCaptchaLoading(false);
     }
   };
 
@@ -281,53 +285,58 @@ function LoginForm() {
         </div>
       </div>
 
-      {captchaData && (
-        <div className="space-y-1.5">
-          <label
-            className="text-sm font-medium text-[var(--text-secondary)] flex items-center gap-1.5"
-            htmlFor="captcha"
+      <div className="space-y-1.5">
+        <label
+          className="text-sm font-medium text-[var(--text-secondary)] flex items-center gap-1.5"
+          htmlFor="captcha"
+        >
+          <Shield className="h-3.5 w-3.5 text-[var(--accent)]" />
+          Captcha
+        </label>
+        <div className="flex gap-2 items-center">
+          {captchaLoading ? (
+            <div className="bg-[var(--bg-card)] rounded-lg p-1 h-10 w-[90px] flex items-center justify-center border border-[var(--border-primary)] flex-shrink-0 overflow-hidden relative">
+              <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.4s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+              <div className="w-full h-5 rounded bg-[var(--border-primary)]/60" />
+            </div>
+          ) : captchaData?.captchaUrl ? (
+            <div className="bg-white rounded-lg p-1 h-10 w-[90px] flex items-center justify-center overflow-hidden border border-[var(--border-primary)] shadow-inner flex-shrink-0">
+              <img
+                src={captchaData.captchaUrl}
+                alt="Captcha"
+                className="h-full w-full object-contain"
+              />
+            </div>
+          ) : captchaData?.captchaText ? (
+            <div className="bg-white rounded-lg h-10 px-3 flex items-center justify-center border border-[var(--border-primary)] shadow-inner flex-shrink-0">
+              <span className="font-mono font-bold text-lg tracking-[0.25em] text-gray-800 select-none">
+                {captchaData.captchaText}
+              </span>
+            </div>
+          ) : null}
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            onClick={fetchCaptcha}
+            title="Refresh"
+            className="h-10 w-10 flex-shrink-0"
+            disabled={captchaLoading}
           >
-            <Shield className="h-3.5 w-3.5 text-[var(--accent)]" />
-            Captcha
-          </label>
-          <div className="flex gap-2 items-center">
-            {captchaData.captchaUrl ? (
-              <div className="bg-white rounded-lg p-1 h-10 w-[90px] flex items-center justify-center overflow-hidden border border-[var(--border-primary)] shadow-inner flex-shrink-0">
-                <img
-                  src={captchaData.captchaUrl}
-                  alt="Captcha"
-                  className="h-full w-full object-contain"
-                />
-              </div>
-            ) : captchaData.captchaText ? (
-              <div className="bg-white rounded-lg h-10 px-3 flex items-center justify-center border border-[var(--border-primary)] shadow-inner flex-shrink-0">
-                <span className="font-mono font-bold text-lg tracking-[0.25em] text-gray-800 select-none">
-                  {captchaData.captchaText}
-                </span>
-              </div>
-            ) : null}
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              onClick={fetchCaptcha}
-              title="Refresh"
-              className="h-10 w-10 flex-shrink-0"
-            >
-              <RotateCw className="h-3.5 w-3.5" />
-            </Button>
-            <Input
-              id="captcha"
-              placeholder="Enter code"
-              value={formData.captcha}
-              onChange={handleChange}
-              required
-              autoComplete="off"
-              className="flex-1 min-w-0 h-10"
-            />
-          </div>
+            <RotateCw className={`h-3.5 w-3.5 ${captchaLoading ? "animate-spin" : ""}`} />
+          </Button>
+          <Input
+            id="captcha"
+            placeholder="Enter code"
+            value={formData.captcha}
+            onChange={handleChange}
+            required
+            autoComplete="off"
+            className="flex-1 min-w-0 h-10"
+            disabled={captchaLoading}
+          />
         </div>
-      )}
+      </div>
 
       <Button
         type="submit"
