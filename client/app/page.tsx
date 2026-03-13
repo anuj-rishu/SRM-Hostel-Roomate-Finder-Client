@@ -17,7 +17,7 @@ import {
 import { FollowBanner } from "@/components/FollowBanner";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { auth, passkey } from "@/lib/api";
+import { auth, passkey, getLoginCooldownRemaining, applyLoginCooldown, clearLoginCooldown, isSrmIpBlockError } from "@/lib/api";
 import { startAuthentication } from "@simplewebauthn/browser";
 
 export default function Home() {
@@ -136,8 +136,107 @@ function FeaturePill({ icon, text }: { icon: React.ReactNode; text: string }) {
   );
 }
 
+function RoommateSearchOverlay() {
+  const messages = [
+    "Syncing with SRM portal...",
+    "Fetching your hostel data...",
+    "Scanning for roommates...",
+    "Almost there...",
+  ];
+  const [msgIndex, setMsgIndex] = useState(0);
+  const [fade, setFade] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFade(false);
+      setTimeout(() => {
+        setMsgIndex((prev) => (prev + 1) % messages.length);
+        setFade(true);
+      }, 300);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center"
+      style={{
+        background:
+          "radial-gradient(ellipse at 50% 40%, oklch(0.15 0.04 220) 0%, oklch(0.08 0.02 220) 60%, oklch(0.06 0.01 220) 100%)",
+      }}
+    >
+      <div className="absolute inset-0 bg-[linear-gradient(var(--accent)/4_1px,transparent_1px),linear-gradient(90deg,var(--accent)/4_1px,transparent_1px)] bg-[size:64px_64px] pointer-events-none opacity-20" />
+
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[radial-gradient(ellipse_at_center,var(--accent-glow),transparent_65%)] pointer-events-none opacity-60" />
+
+      <div className="relative flex flex-col items-center gap-8 px-6 text-center">
+        <div className="relative flex items-center justify-center">
+          <div
+            className="absolute w-32 h-32 rounded-full border-2 border-transparent"
+            style={{
+              borderTopColor: "var(--accent)",
+              borderRightColor: "var(--accent)",
+              animation: "spin 1.4s linear infinite",
+            }}
+          />
+          <div
+            className="absolute w-24 h-24 rounded-full border-2 border-transparent"
+            style={{
+              borderBottomColor: "oklch(0.72 0.18 190)",
+              borderLeftColor: "oklch(0.72 0.18 190)",
+              animation: "spin 1.8s linear infinite reverse",
+            }}
+          />
+          <div
+            className="absolute w-20 h-20 rounded-full"
+            style={{
+              background:
+                "radial-gradient(circle, var(--accent)/20 0%, transparent 70%)",
+              animation: "pulse 2s ease-in-out infinite",
+            }}
+          />
+          <div className="relative z-10 p-4 rounded-full bg-[var(--bg-card)] border border-[var(--accent)]/25 shadow-[0_0_40px_rgba(14,165,233,0.25)]">
+            <Users className="h-8 w-8 text-[var(--accent)]" />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[var(--text-primary)]">
+            Looking for your{" "}
+            <span className="text-gradient">Roommate</span>
+          </h2>
+          <p
+            className="text-sm text-[var(--text-muted)] transition-opacity duration-300"
+            style={{ opacity: fade ? 1 : 0 }}
+          >
+            {messages[msgIndex]}
+          </p>
+        </div>
+
+        <div className="flex gap-2">
+          {[0, 1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="w-2 h-2 rounded-full bg-[var(--accent)]/40"
+              style={{
+                animation: `pulse 1.2s ease-in-out infinite`,
+                animationDelay: `${i * 0.25}s`,
+              }}
+            />
+          ))}
+        </div>
+
+        <p className="text-xs text-[var(--text-muted)] max-w-xs leading-relaxed">
+          Hang tight! We&apos;re matching you with verified SRM students in your hostel.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function LoginForm() {
   const [loading, setLoading] = useState(false);
+  const [showRoommateSearch, setShowRoommateSearch] = useState(false);
   const [captchaLoading, setCaptchaLoading] = useState(true);
   const [captchaData, setCaptchaData] = useState<{
     captchaText?: string;
@@ -151,13 +250,25 @@ function LoginForm() {
     captcha: "",
   });
   const [error, setError] = useState("");
+  const [cooldown, setCooldown] = useState(0);
   const router = useRouter();
+
+  useEffect(() => {
+    const initial = getLoginCooldownRemaining();
+    if (initial > 0) setCooldown(initial);
+    const timer = setInterval(() => {
+      const remaining = getLoginCooldownRemaining();
+      setCooldown(remaining);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     fetchCaptcha();
   }, []);
 
   const fetchCaptcha = async () => {
+    if (getLoginCooldownRemaining() > 0) return;
     setCaptchaLoading(true);
     try {
       const res = await auth.getCaptcha();
@@ -168,12 +279,12 @@ function LoginForm() {
           token: res.data.token,
         });
       }
-    } catch (err) {
-      console.error("Failed to fetch captcha", err);
+    } catch (_err) {
     } finally {
       setCaptchaLoading(false);
     }
   };
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -183,6 +294,13 @@ function LoginForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    const remaining = getLoginCooldownRemaining();
+    if (remaining > 0) {
+      setError(`Please wait ${remaining}s before trying again to protect the server.`);
+      return;
+    }
+
     setLoading(true);
 
     if (!captchaData?.token) {
@@ -200,6 +318,7 @@ function LoginForm() {
       });
 
       if (res.data.success) {
+        clearLoginCooldown();
         sessionStorage.setItem("token", res.data.token);
         sessionStorage.setItem(
           "user",
@@ -210,19 +329,45 @@ function LoginForm() {
           }),
         );
         window.dispatchEvent(new Event("user-login"));
+        setShowRoommateSearch(true);
+        await new Promise((resolve) => setTimeout(resolve, 4500));
         router.push("/dashboard");
       }
     } catch (err: any) {
-      setError(err.response?.data?.error || "Login failed. Please try again.");
-      fetchCaptcha();
-      setFormData((prev) => ({ ...prev, captcha: "" }));
+      applyLoginCooldown();
+      const serverMsg: string = err.response?.data?.error || err.message || "Login failed. Please try again.";
+      const isIpBlock = isSrmIpBlockError(serverMsg) || err.isSrmIpBlock;
+      if (isIpBlock) {
+        setError("⚠️ SRM portal is temporarily overloaded. Please wait a moment — the system will retry automatically.");
+      } else {
+        setError(serverMsg);
+        fetchCaptcha();
+        setFormData((prev) => ({ ...prev, captcha: "" }));
+      }
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <>
+      {showRoommateSearch && <RoommateSearchOverlay />}
+      <form onSubmit={handleSubmit} className="space-y-4">
+
+      {cooldown > 0 && (
+        <div className="p-3 text-sm text-amber-400 bg-amber-500/8 border border-amber-500/20 rounded-xl flex items-start gap-2 animate-slide-up">
+          <div className="w-5 h-5 rounded-full bg-amber-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+            <Shield className="h-3 w-3 text-amber-400" />
+          </div>
+          <div>
+            <p className="font-semibold">Rate limit active</p>
+            <p className="text-amber-400/80 text-xs mt-0.5">
+              Wait <span className="font-bold tabular-nums">{cooldown}s</span> to protect the server from IP blocks.
+            </p>
+          </div>
+        </div>
+      )}
+
       {error && (
         <div className="p-3 text-sm text-red-400 bg-red-500/8 border border-red-500/15 rounded-xl flex items-start gap-2 animate-slide-up">
           <div className="w-5 h-5 rounded-full bg-red-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -321,7 +466,7 @@ function LoginForm() {
             onClick={fetchCaptcha}
             title="Refresh"
             className="h-10 w-10 flex-shrink-0"
-            disabled={captchaLoading}
+            disabled={captchaLoading || cooldown > 0}
           >
             <RotateCw className={`h-3.5 w-3.5 ${captchaLoading ? "animate-spin" : ""}`} />
           </Button>
@@ -341,7 +486,7 @@ function LoginForm() {
       <Button
         type="submit"
         className="w-full h-11 text-sm font-semibold mt-1"
-        disabled={loading}
+        disabled={loading || cooldown > 0}
       >
         {loading ? (
           <span className="flex items-center gap-2">
@@ -367,6 +512,11 @@ function LoginForm() {
             </svg>
             Signing In...
           </span>
+        ) : cooldown > 0 ? (
+          <span className="flex items-center gap-2">
+            <Shield className="h-4 w-4" />
+            Wait {cooldown}s
+          </span>
         ) : (
           <span className="flex items-center gap-2">
             Sign In
@@ -386,6 +536,7 @@ function LoginForm() {
         .
       </p>
     </form>
+    </>
   );
 }
 
@@ -399,6 +550,7 @@ function PasskeyLoginButton() {
   } | null>(null);
   const [captchaInput, setCaptchaInput] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [showRoommateSearch, setShowRoommateSearch] = useState(false);
   const router = useRouter();
 
   const handlePasskeyLogin = async () => {
@@ -448,6 +600,12 @@ function PasskeyLoginButton() {
     e.preventDefault();
     if (!captchaData || !captchaInput) return;
 
+    const remaining = getLoginCooldownRemaining();
+    if (remaining > 0) {
+      setError(`Please wait ${remaining}s before trying again.`);
+      return;
+    }
+
     setError("");
     setSubmitting(true);
 
@@ -468,9 +626,13 @@ function PasskeyLoginButton() {
           }),
         );
         window.dispatchEvent(new Event("user-login"));
+        clearLoginCooldown();
+        setShowRoommateSearch(true);
+        await new Promise((resolve) => setTimeout(resolve, 4500));
         router.push("/dashboard");
       }
     } catch (err: any) {
+      applyLoginCooldown();
       setError(
         err.response?.data?.error ||
           err.message ||
@@ -484,7 +646,9 @@ function PasskeyLoginButton() {
   };
 
   return (
-    <div className="space-y-3">
+    <>
+      {showRoommateSearch && <RoommateSearchOverlay />}
+      <div className="space-y-3">
       {error && (
         <div className="p-3 text-sm text-red-400 bg-red-500/8 border border-red-500/15 rounded-xl flex items-start gap-2 animate-slide-up">
           <div className="w-5 h-5 rounded-full bg-red-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -615,5 +779,6 @@ function PasskeyLoginButton() {
         </button>
       )}
     </div>
+    </>
   );
 }

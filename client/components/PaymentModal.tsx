@@ -57,7 +57,6 @@ export function PaymentModal({
     }
   }, [isOpen]);
 
-  // Lock body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -90,7 +89,13 @@ export function PaymentModal({
         return;
       }
 
-      const cashfree = await window.Cashfree({
+      if (typeof window.Cashfree !== "function") {
+        setError("Payment system is still initializing. Please wait a few seconds and try again.");
+        setLoading(false);
+        return;
+      }
+
+      const cashfree = window.Cashfree({
         mode:
           process.env.NEXT_PUBLIC_CASHFREE_ENV === "production"
             ? "production"

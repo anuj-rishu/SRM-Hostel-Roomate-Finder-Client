@@ -5,6 +5,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import Script from "next/script";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -69,6 +70,10 @@ export default function RootLayout({
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
+        />
+        <Script
+          src="https://sdk.cashfree.com/js/v3/cashfree.js"
+          strategy="lazyOnload"
         />
       </head>
       <body

@@ -82,7 +82,6 @@ function DashboardContent() {
         setPrice(configRes.data.amount);
       }
     } catch (err: any) {
-      console.error("My Room error", err);
       if (err.response?.status === 401) {
         router.push("/");
       } else {
@@ -108,14 +107,18 @@ function DashboardContent() {
       payment
         .verifyPayment(orderId)
         .then((res) => {
-          if (res.data.paid) {
+          if (res.data.success) {
             fetchData();
           }
         })
-        .catch(() => {});
+        .catch((err: any) => {
+          if (err.response?.status === 401) {
+            router.push("/");
+          }
+        });
       window.history.replaceState({}, "", "/dashboard");
     }
-  }, [searchParams, fetchData]);
+  }, [searchParams, fetchData, router]);
 
   const handlePaymentSuccess = () => {
     setPaymentModalOpen(false);
@@ -142,10 +145,6 @@ function DashboardContent() {
 
   return (
     <>
-      <Script
-        src="https://sdk.cashfree.com/js/v3/cashfree.js"
-        strategy="lazyOnload"
-      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 min-h-[calc(100vh-4rem)]">
         <div className="flex justify-center mb-6 animate-fade-up">
@@ -257,7 +256,7 @@ function DashboardContent() {
                         hostel={data.myRoom?.hostelName || "SRM Hostel"}
                         email={student.email}
                         phone={student.phone}
-                        imageUrl={`https://api.dicebear.com/7.x/initials/svg?seed=${student.registerNo}&backgroundColor=0ea5e9`}
+                        imageUrl={`https://api.dicebear.com/7.x/avataaars/svg?seed=${student.registerNo}`}
                         locked={!data.hasPaid}
                         price={price}
                         onUnlockClick={() => setPaymentModalOpen(true)}
@@ -294,7 +293,6 @@ function DashboardContent() {
         )}
       </div>
 
-      {/* Payment Modal */}
       <PaymentModal
         isOpen={paymentModalOpen}
         onClose={() => setPaymentModalOpen(false)}
