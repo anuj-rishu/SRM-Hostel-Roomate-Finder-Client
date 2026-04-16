@@ -39,7 +39,7 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
   );
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const [price, setPrice] = useState<number>(19);
+  const [price, setPrice] = useState<number>(13);
   const [isAdmin, setIsAdmin] = useState(false);
 
   const fetchStatus = useCallback(async () => {
