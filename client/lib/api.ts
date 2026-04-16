@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:9001/api";
 const FALLBACK_API_URL = process.env.NEXT_PUBLIC_FALLBACK_API_URL;
 
 const RATE_LIMIT_KEY = "srm_login_cooldown";
@@ -134,16 +134,7 @@ export const auth = {
   },
 };
 
-export const passkey = {
-  getRegistrationOptions: () => api.get("/passkey/register-options"),
-  verifyRegistration: (data: any) => api.post("/passkey/register-verify", data),
-  getAuthenticationOptions: () => api.get("/passkey/auth-options"),
-  verifyAuthentication: (data: any) => api.post("/passkey/auth-verify", data),
-  completeLogin: (data: any) => api.post("/passkey/auth-complete", data),
-  list: () => api.get("/passkey/list"),
-  remove: (credentialId: string) =>
-    api.delete(`/passkey/${encodeURIComponent(credentialId)}`),
-};
+
 
 export const roommates = {
   getAll: () => api.get("/roommates"),
