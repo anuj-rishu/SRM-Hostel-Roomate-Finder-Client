@@ -15,6 +15,7 @@ import {
   Mail,
   Phone,
 } from "lucide-react";
+import toast from "react-hot-toast";
 import { Button } from "@/components/ui/Button";
 import { payment } from "@/lib/api";
 
@@ -38,7 +39,6 @@ export function PaymentModal({
   roommateCount,
 }: PaymentModalProps) {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [price, setPrice] = useState<number>(19);
 
   useEffect(() => {
@@ -72,7 +72,6 @@ export function PaymentModal({
 
   const handlePayment = async () => {
     setLoading(true);
-    setError("");
 
     try {
       const res = await payment.createOrder();
@@ -84,13 +83,13 @@ export function PaymentModal({
       }
 
       if (!data.paymentSessionId) {
-        setError("Failed to initialize payment. Please try again.");
+        toast.error("Failed to initialize payment. Please try again.");
         setLoading(false);
         return;
       }
 
       if (typeof window.Cashfree !== "function") {
-        setError("Payment system is still initializing. Please wait a few seconds and try again.");
+        toast.error("Payment system is still initializing. Please wait a few seconds and try again.");
         setLoading(false);
         return;
       }
@@ -109,7 +108,7 @@ export function PaymentModal({
 
       cashfree.checkout(checkoutOptions).then(async (result: any) => {
         if (result.error) {
-          setError(result.error.message || "Payment failed. Please try again.");
+          toast.error(result.error.message || "Payment failed. Please try again.");
           setLoading(false);
           return;
         }
@@ -124,12 +123,12 @@ export function PaymentModal({
             if (verifyRes.data.paid) {
               onPaymentSuccess();
             } else {
-              setError(
+              toast.error(
                 "Payment verification pending. Please refresh the page.",
               );
             }
-          } catch {
-            setError(
+          } catch (err) {
+            toast.error(
               "Payment verification failed. Please refresh and try again.",
             );
           }
@@ -138,7 +137,7 @@ export function PaymentModal({
       });
     } catch (err: any) {
       console.error("Payment error:", err);
-      setError(
+      toast.error(
         err.response?.data?.error || "Something went wrong. Please try again.",
       );
       setLoading(false);
@@ -244,15 +243,7 @@ export function PaymentModal({
               </div>
             </div>
 
-            {/* Error */}
-            {error && (
-              <div className="p-2.5 sm:p-3 rounded-xl text-red-400 text-xs border border-red-500/15 bg-red-500/8">
-                <div className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0 mt-1" />
-                  <span className="leading-snug">{error}</span>
-                </div>
-              </div>
-            )}
+
           </div>
         </div>
 
@@ -270,9 +261,7 @@ export function PaymentModal({
               </>
             ) : (
               <>
-                <CreditCard className="h-4 w-4" />
                 Pay ₹{price} & Unlock Now
-                <Sparkles className="h-4 w-4" />
               </>
             )}
           </Button>

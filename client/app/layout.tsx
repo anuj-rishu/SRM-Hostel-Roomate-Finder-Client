@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import Script from "next/script";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -84,6 +85,16 @@ export default function RootLayout({
         }}
       >
         <ThemeProvider>
+          <Toaster 
+            position="top-center" 
+            reverseOrder={false}
+            toastOptions={{
+              style: {
+                maxWidth: '600px',
+                whiteSpace: 'nowrap',
+              },
+            }}
+          />
           <div className="noise-overlay" />
           <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 transition-opacity duration-500">
             <div

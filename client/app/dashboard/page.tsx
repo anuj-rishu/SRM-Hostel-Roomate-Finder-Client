@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import toast from "react-hot-toast";
 import { RoommateCard } from "@/components/RoommateCard";
 import { PaymentModal } from "@/components/PaymentModal";
 import {
@@ -12,6 +13,7 @@ import {
   UserSearch,
   Inbox,
   Sparkles,
+  Home,
 } from "lucide-react";
 import { FollowBanner } from "@/components/FollowBanner";
 import { useRouter } from "next/navigation";
@@ -59,7 +61,6 @@ export default function Dashboard() {
 function DashboardContent() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<DashboardData | null>(null);
-  const [error, setError] = useState("");
   const [price, setPrice] = useState<number>(19);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const router = useRouter();
@@ -75,7 +76,9 @@ function DashboardContent() {
       if (roommatesRes.data.success) {
         setData(roommatesRes.data);
       } else {
-        setError(roommatesRes.data.message || "Failed to fetch data");
+        const msg = roommatesRes.data.message || "Failed to fetch data";
+        const cleanMsg = msg.includes("No hostel details found") ? "No hostel details found" : msg;
+        toast.error(cleanMsg, { id: "dashboard-fetch-error" });
       }
 
       if (configRes.data.success) {
@@ -85,7 +88,9 @@ function DashboardContent() {
       if (err.response?.status === 401) {
         router.push("/");
       } else {
-        setError(err.response?.data?.error || "Failed to load roommates.");
+        const msg = err.response?.data?.error || "Failed to load roommates.";
+        const cleanMsg = msg.includes("No hostel details found") ? "No hostel details found" : msg;
+        toast.error(cleanMsg, { id: "dashboard-fetch-error" });
       }
     } finally {
       setLoading(false);
@@ -146,34 +151,17 @@ function DashboardContent() {
   return (
     <>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 min-h-[calc(100vh-4rem)]">
-        <div className="flex justify-center mb-6 animate-fade-up">
-          <FollowBanner />
-        </div>
-        <div className="mb-8 md:mb-10 animate-fade-up">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 pb-8 md:pt-4 md:pb-12 min-h-[calc(100vh-4rem)]">
+        <div className="mb-3 md:mb-4 animate-fade-up">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-[var(--text-primary)] mb-2">
-                {data?.myRoom ? (
-                  <span className="flex flex-wrap items-center gap-2">
-                    <span className="text-gradient">
-                      Room {data.myRoom.roomNo}
-                    </span>
-                    <span className="text-[var(--text-muted)] font-normal text-xl">
-                      —
-                    </span>
-                    <span>{data.myRoom.hostelName}</span>
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-3">
-                    <UserSearch className="h-8 w-8 text-[var(--accent)]" />
-                    Explore Roommates
-                  </span>
-                )}
-              </h1>
 
               {data?.myRoom && (
                 <div className="flex flex-wrap items-center gap-3 mt-2">
+                  <DetailChip
+                    icon={<Home className="h-3.5 w-3.5" />}
+                    text={`Room ${data.myRoom.roomNo}`}
+                  />
                   <DetailChip
                     icon={<Building2 className="h-3.5 w-3.5" />}
                     text={data.myRoom.hostelName}
@@ -193,10 +181,10 @@ function DashboardContent() {
             </div>
           </div>
           {data?.isAdmin && (
-            <div className="mt-6 p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-rose-500/10 border border-amber-500/20 flex items-center gap-3 animate-fade-up">
+            <div className="mt-6 p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-emerald-500/10 border border-amber-500/20 flex items-center gap-3 animate-fade-up">
               <div className="relative">
                 <div className="absolute inset-0 bg-amber-500/20 rounded-xl blur-md" />
-                <div className="relative p-2 rounded-xl bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 shadow-lg">
+                <div className="relative p-2 rounded-xl bg-gradient-to-br from-amber-500 via-orange-500 to-emerald-500 shadow-lg">
                   <Sparkles className="h-4 w-4 text-white" />
                 </div>
               </div>
@@ -212,26 +200,14 @@ function DashboardContent() {
           )}
         </div>
 
-        {error ? (
-          <div className="p-4 rounded-2xl text-red-400 text-sm border border-red-500/15 bg-red-500/8 animate-fade-up">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-red-400" />
-              {error}
-            </div>
-          </div>
-        ) : (
-          <>
             {data?.roommates && data.roommates.length > 0 ? (
               <div
-                className="space-y-6 animate-fade-up"
+                className="space-y-4 animate-fade-up"
                 style={{ animationDelay: "0.2s" }}
               >
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-xl bg-[var(--accent-subtle)] border border-[var(--accent)]/15">
-                    <Users className="h-5 w-5 text-[var(--accent)]" />
-                  </div>
                   <div>
-                    <h2 className="text-xl font-bold text-[var(--text-primary)]">
+                    <h2 className="text-base font-bold text-[var(--text-primary)]">
                       {data.roommates.length > 1
                         ? "Your Roommates"
                         : "Your Roommate"}
@@ -289,8 +265,10 @@ function DashboardContent() {
                 </div>
               </div>
             )}
-          </>
-        )}
+
+        <div className="flex justify-center mt-12 animate-fade-up">
+          <FollowBanner />
+        </div>
       </div>
 
       <PaymentModal

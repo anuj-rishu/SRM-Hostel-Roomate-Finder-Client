@@ -11,6 +11,7 @@ import {
   AlertCircle,
   Sparkles,
 } from "lucide-react";
+import toast from "react-hot-toast";
 import { Button } from "@/components/ui/Button";
 import { payment } from "@/lib/api";
 
@@ -37,14 +38,11 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
   const [pendingPayment, setPendingPayment] = useState<PaymentData | null>(
     null,
   );
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
   const [price, setPrice] = useState<number>(13);
   const [isAdmin, setIsAdmin] = useState(false);
 
   const fetchStatus = useCallback(async () => {
     setLoading(true);
-    setError("");
     try {
       const [statusRes, configRes] = await Promise.all([
         payment.getStatus(),
@@ -60,7 +58,7 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
         setPrice(configRes.data.amount);
       }
     } catch {
-      setError("Failed to load payment info.");
+      toast.error("Failed to load payment info.");
     } finally {
       setLoading(false);
     }
@@ -69,7 +67,6 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
   useEffect(() => {
     if (isOpen) {
       fetchStatus();
-      setMessage("");
       document.body.style.overflow = "hidden";
 
       const savedUser = sessionStorage.getItem("user");
@@ -91,8 +88,6 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
 
   const handleManualVerify = async () => {
     setVerifying(true);
-    setMessage("");
-    setError("");
 
     try {
       const res = await payment.manualVerify();
@@ -102,12 +97,12 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
         setHasPaid(true);
         setPaidPayment(data.payment);
         setPendingPayment(null);
-        setMessage(data.message);
+        toast.success(data.message);
       } else {
-        setMessage(data.message);
+        toast(data.message);
       }
     } catch {
-      setError("Verification failed. Please try again.");
+      toast.error("Verification failed. Please try again.");
     } finally {
       setVerifying(false);
     }
@@ -343,31 +338,7 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
               </div>
             )}
 
-            {/* Success / Error messages */}
-            {message && (
-              <div
-                className={`p-3 rounded-xl text-xs border ${
-                  message.includes("successfully") ||
-                  message.includes("verified")
-                    ? "text-emerald-400 border-emerald-500/15 bg-emerald-500/8"
-                    : "text-amber-400 border-amber-500/15 bg-amber-500/8"
-                }`}
-              >
-                <div className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-current flex-shrink-0 mt-1" />
-                  <span className="leading-snug">{message}</span>
-                </div>
-              </div>
-            )}
 
-            {error && (
-              <div className="p-3 rounded-xl text-red-400 text-xs border border-red-500/15 bg-red-500/8">
-                <div className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0 mt-1" />
-                  <span className="leading-snug">{error}</span>
-                </div>
-              </div>
-            )}
           </div>
         </div>
 

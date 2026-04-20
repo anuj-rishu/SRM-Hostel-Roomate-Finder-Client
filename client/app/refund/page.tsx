@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/Button";
 
 export default function RefundPage() {
   return (
-    <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8 relative z-10">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <div className="min-h-screen pt-4 pb-10 px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-3xl mx-auto space-y-4">
         {/* Header Section */}
         <div className="space-y-4 animate-fade-up">
           <Link href="/">
@@ -21,24 +21,18 @@ export default function RefundPage() {
             </Button>
           </Link>
 
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 rounded-xl bg-[var(--accent-subtle)] border border-[var(--border-accent)]">
-              <RefreshCcw className="h-6 w-6 text-[var(--accent)]" />
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-[var(--text-primary)] tracking-tight">
-              Cancellation & Refund Policy
-            </h1>
-          </div>
+          <h1 className="text-xl sm:text-2xl font-extrabold text-[var(--text-primary)] tracking-tight mb-1.5">
+            Cancellation & Refund Policy
+          </h1>
 
-          <div className="flex items-center gap-2 text-sm text-[var(--text-secondary)]">
-            <Calendar className="h-4 w-4" />
-            <span>Last updated on 19-02-2026 10:27:51</span>
+          <div className="text-[11px] text-[var(--text-muted)] font-medium uppercase tracking-wider">
+            Last updated on 19-02-2026 10:27:51
           </div>
         </div>
 
         {/* Content Section */}
-        <div className="card-premium p-6 sm:p-10 space-y-6 animate-fade-up animation-delay-1000">
-          <div className="prose prose-invert max-w-none text-[var(--text-secondary)] leading-relaxed">
+        <div className="rounded-2xl border border-[var(--border-primary)] bg-[var(--bg-card)] p-5 sm:p-8 space-y-5 animate-fade-up">
+          <div className="prose prose-invert max-w-none text-[var(--text-secondary)] text-sm leading-relaxed text-justify">
             <p className="mb-4">
               <strong className="text-[var(--text-primary)]">
                 ANUJ TIWARI

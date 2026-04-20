@@ -1,4 +1,4 @@
-import { MapPin, Phone, Mail, User, Lock, Sparkles } from "lucide-react";
+import { MapPin, Phone, Mail, Lock, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 interface RoommateProps {
@@ -28,35 +28,30 @@ export function RoommateCard({
       <div
         className={`absolute top-0 left-0 right-0 h-[2px] transition-opacity duration-500 ${
           locked
-            ? "bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 opacity-70"
+            ? "bg-gradient-to-r from-amber-500 via-orange-500 to-emerald-500 opacity-70"
             : "bg-gradient-to-r from-sky-500 via-cyan-500 to-teal-500 opacity-50 group-hover:opacity-100"
         }`}
       />
 
-      <div className="p-6">
+      <div className="p-5">
         {/* Profile header */}
-        <div className="flex items-start gap-4">
+        <div className="flex items-center gap-3">
           <div className="relative flex-shrink-0">
             <div className="absolute inset-0 bg-[var(--accent)] rounded-full blur-md opacity-0 group-hover:opacity-30 transition-opacity duration-500" />
-            <div className="relative h-14 w-14 rounded-full overflow-hidden ring-2 ring-[var(--border-secondary)] group-hover:ring-[var(--accent)]/40 transition-all duration-500">
+            <div className="relative h-11 w-11 rounded-full overflow-hidden ring-2 ring-[var(--border-secondary)] group-hover:ring-[var(--accent)]/40 transition-all duration-500">
               <img
                 src={imageUrl}
                 alt={name}
                 className="h-full w-full object-cover"
               />
             </div>
-            <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-400 rounded-full border-2 border-[var(--bg-card-solid)] shadow-lg shadow-emerald-400/30" />
+            <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-[var(--bg-card-solid)] shadow-lg shadow-emerald-400/30" />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-bold text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-all duration-300 truncate">
+            <h3 className="text-base font-bold text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-all duration-300 truncate">
               {name}
             </h3>
-            <div className="flex items-center gap-1.5 mt-1">
-              <span className="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-[var(--accent)] bg-[var(--accent-subtle)] px-2.5 py-0.5 rounded-full border border-[var(--accent)]/15">
-                <User className="h-3 w-3" />
-                Student
-              </span>
-            </div>
+
           </div>
         </div>
 
@@ -115,8 +110,9 @@ export function RoommateCard({
                   className="w-full mt-1 gap-2 text-xs py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 border-0 shadow-lg shadow-amber-500/15 hover:shadow-amber-500/25 transition-all duration-300"
                   size="sm"
                 >
-                  <Sparkles className="h-3.5 w-3.5" />
-                  Unlock All Contacts — ₹{price || 19} only
+                  <span className="flex items-center justify-center gap-2">
+                    Unlock All Contacts — ₹{price || 19} only
+                  </span>
                 </Button>
               </div>
             ) : (

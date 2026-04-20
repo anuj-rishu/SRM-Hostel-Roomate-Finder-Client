@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/Button";
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8 relative z-10">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <div className="min-h-screen pt-4 pb-10 px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-3xl mx-auto space-y-4">
         {/* Header Section */}
         <div className="space-y-4 animate-fade-up">
           <Link href="/">
@@ -21,24 +21,18 @@ export default function TermsPage() {
             </Button>
           </Link>
 
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 rounded-xl bg-[var(--accent-subtle)] border border-[var(--border-accent)]">
-              <Scale className="h-6 w-6 text-[var(--accent)]" />
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-[var(--text-primary)] tracking-tight">
-              Terms & Conditions
-            </h1>
-          </div>
+          <h1 className="text-xl sm:text-2xl font-extrabold text-[var(--text-primary)] tracking-tight mb-1.5">
+            Terms & Conditions
+          </h1>
 
-          <div className="flex items-center gap-2 text-sm text-[var(--text-secondary)]">
-            <Calendar className="h-4 w-4" />
-            <span>Last updated on 19-02-2026 10:17:59</span>
+          <div className="text-[11px] text-[var(--text-muted)] font-medium uppercase tracking-wider">
+            Last updated on 19-02-2026 10:17:59
           </div>
         </div>
 
         {/* Content Section */}
-        <div className="card-premium p-6 sm:p-10 space-y-6 animate-fade-up animation-delay-1000">
-          <div className="prose prose-invert max-w-none text-[var(--text-secondary)] leading-relaxed">
+        <div className="rounded-2xl border border-[var(--border-primary)] bg-[var(--bg-card)] p-5 sm:p-8 space-y-5 animate-fade-up">
+          <div className="prose prose-invert max-w-none text-[var(--text-secondary)] text-sm leading-relaxed text-justify">
             <p className="mb-4">
               These Terms and Conditions, along with privacy policy or other
               terms (“Terms”) constitute a binding agreement by and between{" "}
@@ -61,8 +55,8 @@ export default function TermsPage() {
 
             <div className="grid gap-6 my-8">
               <div className="p-4 rounded-xl bg-[var(--bg-hover)] border border-[var(--border-primary)]">
-                <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-2 flex items-center gap-2">
-                  <Globe className="h-4 w-4 text-[var(--accent)]" />
+                <h3 className="text-base font-semibold text-[var(--text-primary)] mb-1.5 flex items-center gap-2">
+                  <Globe className="h-3.5 w-3.5 text-[var(--accent)]" />
                   Terms of Use
                 </h3>
                 <p>
@@ -126,7 +120,7 @@ export default function TermsPage() {
               </li>
             </ul>
 
-            <h3 className="text-xl font-bold text-[var(--text-primary)] mt-8 mb-4">
+            <h3 className="text-lg font-bold text-[var(--text-primary)] mt-6 mb-3">
               Refunds & Cancellations
             </h3>
             <p className="mb-4">
@@ -139,7 +133,7 @@ export default function TermsPage() {
               for a refund.
             </p>
 
-            <h3 className="text-xl font-bold text-[var(--text-primary)] mt-8 mb-4">
+            <h3 className="text-lg font-bold text-[var(--text-primary)] mt-6 mb-3">
               Force Majeure
             </h3>
             <p className="mb-4">
@@ -149,7 +143,7 @@ export default function TermsPage() {
               majeure event.
             </p>
 
-            <h3 className="text-xl font-bold text-[var(--text-primary)] mt-8 mb-4">
+            <h3 className="text-lg font-bold text-[var(--text-primary)] mt-6 mb-3">
               Governing Law & Jurisdiction
             </h3>
             <p className="mb-4">
@@ -166,7 +160,7 @@ export default function TermsPage() {
               .
             </p>
 
-            <h3 className="text-xl font-bold text-[var(--text-primary)] mt-8 mb-4">
+            <h3 className="text-lg font-bold text-[var(--text-primary)] mt-6 mb-3">
               Contact Us
             </h3>
             <p className="mb-4">
