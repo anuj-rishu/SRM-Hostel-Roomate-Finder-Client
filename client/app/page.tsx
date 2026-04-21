@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import {
@@ -18,14 +18,66 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { auth, isSrmIpBlockError } from "@/lib/api";
 
+// Global store to persist state across remounts (Strict Mode/Mobile-Desktop toggle)
+const captchaStore = {
+  data: null as any,
+  loading: false,
+  promise: null as Promise<void> | null,
+};
+
 export default function Home() {
   const router = useRouter();
+  const [captchaLoading, setCaptchaLoading] = useState(captchaStore.loading);
+  const [captchaData, setCaptchaData] = useState<any>(captchaStore.data);
+
+  const fetchCaptcha = async (force = false) => {
+    // If already loading and not a force refresh, wait for existing promise
+    if (captchaStore.loading && !force) {
+      if (captchaStore.promise) await captchaStore.promise;
+      setCaptchaData(captchaStore.data);
+      setCaptchaLoading(false);
+      return;
+    }
+
+    // If we already have data and not forcing, just use it
+    if (captchaStore.data && !force && !captchaStore.loading) {
+      setCaptchaData(captchaStore.data);
+      setCaptchaLoading(false);
+      return;
+    }
+
+    captchaStore.loading = true;
+    setCaptchaLoading(true);
+
+    captchaStore.promise = (async () => {
+      try {
+        const res = await auth.getCaptcha();
+        if (res.data.success) {
+          captchaStore.data = {
+            captchaText: res.data.captchaText || undefined,
+            captchaUrl: res.data.captchaUrl || undefined,
+            token: res.data.token,
+          };
+          setCaptchaData(captchaStore.data);
+        }
+      } catch (_err) {
+      } finally {
+        captchaStore.loading = false;
+        captchaStore.promise = null;
+        setCaptchaLoading(false);
+      }
+    })();
+
+    await captchaStore.promise;
+  };
 
   useEffect(() => {
     const token =
       typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
     if (token) {
       router.push("/dashboard");
+    } else {
+      fetchCaptcha();
     }
   }, []);
 
@@ -97,7 +149,11 @@ export default function Home() {
                     credentials
                   </p>
                 </div>
-                <LoginForm />
+                <LoginForm 
+                  captchaData={captchaData} 
+                  captchaLoading={captchaLoading} 
+                  fetchCaptcha={fetchCaptcha} 
+                />
               </div>
             </div>
           </div>
@@ -118,14 +174,16 @@ function FeaturePill({ icon, text }: { icon: React.ReactNode; text: string }) {
 
 
 
-function LoginForm() {
+function LoginForm({ 
+  captchaData, 
+  captchaLoading, 
+  fetchCaptcha 
+}: { 
+  captchaData: any; 
+  captchaLoading: boolean; 
+  fetchCaptcha: (force?: boolean) => Promise<void>; 
+}) {
   const [loading, setLoading] = useState(false);
-  const [captchaLoading, setCaptchaLoading] = useState(true);
-  const [captchaData, setCaptchaData] = useState<{
-    captchaText?: string;
-    captchaUrl?: string;
-    token: string;
-  } | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     login: "",
@@ -133,29 +191,6 @@ function LoginForm() {
     captcha: "",
   });
   const router = useRouter();
-
-
-
-  useEffect(() => {
-    fetchCaptcha();
-  }, []);
-
-  const fetchCaptcha = async () => {
-    setCaptchaLoading(true);
-    try {
-      const res = await auth.getCaptcha();
-      if (res.data.success) {
-        setCaptchaData({
-          captchaText: res.data.captchaText || undefined,
-          captchaUrl: res.data.captchaUrl || undefined,
-          token: res.data.token,
-        });
-      }
-    } catch (_err) {
-    } finally {
-      setCaptchaLoading(false);
-    }
-  };
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -294,7 +329,7 @@ function LoginForm() {
           </label>
           <button
             type="button"
-            onClick={fetchCaptcha}
+            onClick={() => fetchCaptcha(true)}
             className="text-[var(--accent)] hover:text-[var(--accent)]/80 transition-all p-1 rounded-lg hover:bg-[var(--accent)]/10 flex items-center gap-1.5 text-xs font-semibold group"
             disabled={captchaLoading}
             title="Refresh Captcha"

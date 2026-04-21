@@ -58,6 +58,8 @@ export default function Dashboard() {
   );
 }
 
+let isFetchingDashboardData = false;
+
 function DashboardContent() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<DashboardData | null>(null);
@@ -67,6 +69,9 @@ function DashboardContent() {
   const searchParams = useSearchParams();
 
   const fetchData = useCallback(async () => {
+    if (isFetchingDashboardData) return;
+    isFetchingDashboardData = true;
+
     try {
       const [roommatesRes, configRes] = await Promise.all([
         roommates.getAll(),
@@ -94,6 +99,10 @@ function DashboardContent() {
       }
     } finally {
       setLoading(false);
+      // Keep lock for 2 seconds to prevent mounting race conditions
+      setTimeout(() => {
+        isFetchingDashboardData = false;
+      }, 2000);
     }
   }, [router]);
 
