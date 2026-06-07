@@ -8,7 +8,7 @@ export default function RefundPage() {
   return (
     <div className="min-h-screen pt-4 pb-10 px-4 sm:px-6 lg:px-8 relative z-10">
       <div className="max-w-3xl mx-auto space-y-4">
-        {/* Header Section */}
+        {}
         <div className="space-y-4 animate-fade-up">
           <Link href="/">
             <Button
@@ -30,7 +30,7 @@ export default function RefundPage() {
           </div>
         </div>
 
-        {/* Content Section */}
+        {}
         <div className="rounded-2xl border border-[var(--border-primary)] bg-[var(--bg-card)] p-5 sm:p-8 space-y-5 animate-fade-up">
           <div className="prose prose-invert max-w-none text-[var(--text-secondary)] text-sm leading-relaxed text-justify">
             <p className="mb-4">

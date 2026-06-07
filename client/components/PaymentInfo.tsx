@@ -126,12 +126,12 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
         className="payment-modal-card w-full sm:max-w-[440px] md:max-w-[480px] rounded-t-2xl sm:rounded-2xl overflow-hidden animate-slide-up-sheet sm:animate-fade-up max-h-[90vh] sm:max-h-[85vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Mobile drag handle */}
+        {}
         <div className="flex sm:hidden justify-center pt-3 pb-1">
           <div className="w-10 h-1 rounded-full bg-white/20" />
         </div>
 
-        {/* Header */}
+        {}
         <div className="relative flex-shrink-0">
           <div className="px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-3">
             <div className="flex items-center gap-3 min-w-0">
@@ -156,7 +156,7 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
           </div>
         </div>
 
-        {/* Content */}
+        {}
         <div className="flex-1 overflow-y-auto overscroll-contain">
           <div className="px-5 sm:px-6 py-4 sm:py-5 space-y-4">
             {loading ? (
@@ -167,8 +167,7 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
                 </p>
               </div>
             ) : isAdmin ? (
-              /* ── Admin state ── */
-              <div className="space-y-6 py-4">
+                            <div className="space-y-6 py-4">
                 <div className="flex items-center justify-center">
                   <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-amber-500/10 border border-amber-500/30 shadow-sm animate-fade-up">
                     <Sparkles className="h-4.5 w-4.5 text-amber-500" />
@@ -187,8 +186,7 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
                 </div>
               </div>
             ) : hasPaid && paidPayment ? (
-              /* ── Active state ── */
-              <div className="space-y-4">
+                            <div className="space-y-4">
                 <div className="flex items-center justify-center">
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20">
                     <CheckCircle2 className="h-4 w-4 text-emerald-500" />
@@ -230,8 +228,7 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
                 </div>
               </div>
             ) : paidPayment && paidPayment.isExpired ? (
-              /* ── Expired state ── */
-              <div className="space-y-4">
+                            <div className="space-y-4">
                 <div className="flex items-center justify-center">
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20">
                     <Clock className="h-4 w-4 text-red-400" />
@@ -267,8 +264,7 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
                 </div>
               </div>
             ) : (
-              /* ── Unpaid / Pending state ── */
-              <div className="space-y-4">
+                            <div className="space-y-4">
                 <div className="flex items-center justify-center">
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20">
                     <Clock className="h-4 w-4 text-amber-500" />
@@ -316,7 +312,7 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
                   </div>
                 )}
 
-                {/* Manual verify button */}
+                {}
                 <Button
                   onClick={handleManualVerify}
                   disabled={verifying}
@@ -342,7 +338,7 @@ export function PaymentInfo({ isOpen, onClose }: PaymentInfoProps) {
           </div>
         </div>
 
-        {/* Footer */}
+        {}
         <div className="flex-shrink-0 px-5 sm:px-6 py-4 sm:py-5 border-t border-[var(--border-primary)] bg-[var(--bg-card-solid)] pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:pb-5">
           <Button
             onClick={onClose}

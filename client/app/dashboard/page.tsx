@@ -99,7 +99,7 @@ function DashboardContent() {
       }
     } finally {
       setLoading(false);
-      // Keep lock for 2 seconds to prevent mounting race conditions
+      
       setTimeout(() => {
         isFetchingDashboardData = false;
       }, 2000);

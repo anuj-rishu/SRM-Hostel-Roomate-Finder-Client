@@ -7,7 +7,7 @@ export default function NotFound() {
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 relative z-10">
       <div className="max-w-lg w-full text-center space-y-8 animate-fade-up">
-        {/* 404 Number */}
+        {}
         <div className="relative select-none">
           <span className="text-[clamp(6rem,22vw,10rem)] font-extrabold leading-none tracking-tighter text-gradient opacity-90 block">
             404
@@ -24,14 +24,14 @@ export default function NotFound() {
           </div>
         </div>
 
-        {/* Icon */}
+        {}
         <div className="flex justify-center">
           <div className="p-5 rounded-3xl border border-[var(--border-accent)] bg-[var(--accent-subtle)] animate-float">
             <Compass className="h-10 w-10 text-[var(--accent)]" />
           </div>
         </div>
 
-        {/* Text */}
+        {}
         <div className="space-y-3">
           <h1 className="text-2xl sm:text-3xl font-bold text-[var(--text-primary)]">
             Page not found
@@ -42,7 +42,7 @@ export default function NotFound() {
           </p>
         </div>
 
-        {/* CTA Buttons */}
+        {}
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             href="/"
@@ -68,7 +68,7 @@ export default function NotFound() {
           </Link>
         </div>
 
-        {/* Subtle divider */}
+        {}
         <p className="text-xs text-[var(--text-muted)]">
           Error 404 · SRM ROOMIE
         </p>

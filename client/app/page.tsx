@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { auth, isSrmIpBlockError } from "@/lib/api";
 
-// Global store to persist state across remounts (Strict Mode/Mobile-Desktop toggle)
+
 const captchaStore = {
   data: null as any,
   loading: false,
@@ -31,7 +31,7 @@ export default function Home() {
   const [captchaData, setCaptchaData] = useState<any>(captchaStore.data);
 
   const fetchCaptcha = async (force = false) => {
-    // If already loading and not a force refresh, wait for existing promise
+    
     if (captchaStore.loading && !force) {
       if (captchaStore.promise) await captchaStore.promise;
       setCaptchaData(captchaStore.data);
@@ -39,7 +39,7 @@ export default function Home() {
       return;
     }
 
-    // If we already have data and not forcing, just use it
+    
     if (captchaStore.data && !force && !captchaStore.loading) {
       setCaptchaData(captchaStore.data);
       setCaptchaLoading(false);

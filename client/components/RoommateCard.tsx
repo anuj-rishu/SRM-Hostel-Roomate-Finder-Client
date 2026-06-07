@@ -24,7 +24,7 @@ export function RoommateCard({
 }: RoommateProps) {
   return (
     <div className="group card-premium overflow-hidden relative">
-      {/* Top accent bar */}
+      {}
       <div
         className={`absolute top-0 left-0 right-0 h-[2px] transition-opacity duration-500 ${
           locked
@@ -34,7 +34,7 @@ export function RoommateCard({
       />
 
       <div className="p-5">
-        {/* Profile header */}
+        {}
         <div className="flex items-center gap-3">
           <div className="relative flex-shrink-0">
             <div className="absolute inset-0 bg-[var(--accent)] rounded-full blur-md opacity-0 group-hover:opacity-30 transition-opacity duration-500" />
@@ -55,9 +55,9 @@ export function RoommateCard({
           </div>
         </div>
 
-        {/* Details */}
+        {}
         <div className="mt-5 space-y-2.5">
-          {/* Hostel info */}
+          {}
           <div className="flex items-center gap-3 p-3 rounded-xl bg-[var(--bg-input)] border border-[var(--border-primary)] group-hover:border-[var(--accent)]/20 group-hover:bg-[var(--accent-subtle)] transition-all duration-500">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--accent-subtle)] text-[var(--accent)] border border-[var(--accent)]/10">
               <MapPin className="h-4 w-4" />
@@ -72,11 +72,11 @@ export function RoommateCard({
             </div>
           </div>
 
-          {/* Contact */}
+          {}
           <div className="grid grid-cols-1 gap-1.5">
             {locked ? (
               <div className="space-y-2">
-                {/* Blurred email */}
+                {}
                 <div className="flex items-center gap-3 p-2.5 rounded-xl bg-[var(--bg-input)] border border-amber-500/10 relative overflow-hidden">
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10 text-amber-500 border border-amber-500/10">
                     <Lock className="h-3.5 w-3.5" />
@@ -90,7 +90,7 @@ export function RoommateCard({
                     </span>
                   </div>
                 </div>
-                {/* Blurred phone */}
+                {}
                 <div className="flex items-center gap-3 p-2.5 rounded-xl bg-[var(--bg-input)] border border-amber-500/10 relative overflow-hidden">
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500/10 text-amber-500 border border-amber-500/10">
                     <Lock className="h-3.5 w-3.5" />
@@ -104,7 +104,7 @@ export function RoommateCard({
                     </span>
                   </div>
                 </div>
-                {/* Unlock button */}
+                {}
                 <Button
                   onClick={onUnlockClick}
                   className="w-full mt-1 gap-2 text-xs py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 border-0 shadow-lg shadow-amber-500/15 hover:shadow-amber-500/25 transition-all duration-300"
@@ -163,7 +163,7 @@ export function RoommateCard({
         </div>
       </div>
 
-      {/* Bottom bar */}
+      {}
       <div className="bg-[var(--bg-input)] px-6 py-3 border-t border-[var(--border-primary)] flex justify-between items-center">
         <span className="text-[11px] font-medium text-[var(--text-muted)]">
           SRM Institute of Science and Technology

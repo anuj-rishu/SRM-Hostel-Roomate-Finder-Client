@@ -49,7 +49,7 @@ export default function PrivacyPage() {
   return (
     <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8 relative z-10">
       <div className="max-w-4xl mx-auto space-y-8">
-        {/* Header */}
+        {}
         <div className="space-y-4 animate-fade-up">
           <Link href="/">
             <Button
@@ -84,7 +84,7 @@ export default function PrivacyPage() {
           </p>
         </div>
 
-        {/* Highlight banner */}
+        {}
         <div className="glass-accent rounded-2xl p-5 flex items-start gap-4 animate-fade-up animation-delay-1000">
           <div className="p-2 rounded-xl bg-[var(--accent-subtle)] border border-[var(--border-accent)] flex-shrink-0">
             <ShieldCheck className="h-5 w-5 text-[var(--accent)]" />
@@ -100,7 +100,7 @@ export default function PrivacyPage() {
           </div>
         </div>
 
-        {/* Sections */}
+        {}
         <div className="grid gap-4 animate-fade-up animation-delay-1000">
           {sections.map((section) => (
             <div
@@ -126,7 +126,7 @@ export default function PrivacyPage() {
           ))}
         </div>
 
-        {/* What we store — visual list */}
+        {}
         <div className="card-premium p-6 sm:p-8 animate-fade-up animation-delay-2000">
           <h2 className="text-lg font-bold text-[var(--text-primary)] mb-1">
             Information We Collect
@@ -167,7 +167,7 @@ export default function PrivacyPage() {
           </p>
         </div>
 
-        {/* Contact for privacy concerns */}
+        {}
         <div className="card-premium p-6 flex items-start gap-4 animate-fade-up animation-delay-2000">
           <div className="p-2.5 rounded-xl bg-[var(--accent-subtle)] border border-[var(--border-accent)] flex-shrink-0">
             <Mail className="h-5 w-5 text-[var(--accent)]" />

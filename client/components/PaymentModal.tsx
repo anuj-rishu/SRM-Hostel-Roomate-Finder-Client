@@ -153,12 +153,12 @@ export function PaymentModal({
         className="payment-modal-card w-full sm:max-w-[460px] rounded-t-2xl sm:rounded-2xl overflow-hidden animate-slide-up-sheet sm:animate-fade-up max-h-[85vh] sm:max-h-[80vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Mobile drag handle */}
+        {}
         <div className="flex sm:hidden justify-center pt-2 pb-0.5">
           <div className="w-9 h-1 rounded-full bg-white/20" />
         </div>
 
-        {/* Header */}
+        {}
         <div className="flex-shrink-0">
           <div className="px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2">
             <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
@@ -184,10 +184,10 @@ export function PaymentModal({
           </div>
         </div>
 
-        {/* Content */}
+        {}
         <div className="flex-1 overflow-y-auto overscroll-contain">
           <div className="px-4 sm:px-6 py-3 sm:py-4 space-y-3 sm:space-y-4">
-            {/* Features */}
+            {}
             <div className="space-y-1.5 sm:space-y-2">
               <p className="text-[9px] sm:text-[11px] font-semibold uppercase tracking-wider text-[var(--text-muted)]">
                 What you get
@@ -214,7 +214,7 @@ export function PaymentModal({
               </div>
             </div>
 
-            {/* Price card */}
+            {}
             <div className="relative rounded-xl sm:rounded-2xl bg-gradient-to-br from-amber-500/8 to-orange-500/5 border border-amber-500/20 px-3 py-3 sm:px-5 sm:py-4 text-center">
               <div className="absolute -top-2.5 left-1/2 -translate-x-1/2">
                 <span className="inline-flex items-center gap-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-amber-900 bg-gradient-to-r from-amber-400 to-orange-400 px-2.5 py-0.5 sm:px-3 sm:py-0.5 rounded-full shadow-lg shadow-amber-500/25">
@@ -247,7 +247,7 @@ export function PaymentModal({
           </div>
         </div>
 
-        {/* Footer */}
+        {}
         <div className="flex-shrink-0 px-4 sm:px-6 py-3 sm:py-4 border-t border-[var(--border-primary)] space-y-2.5 bg-[var(--bg-card-solid)] pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:pb-4">
           <Button
             onClick={handlePayment}

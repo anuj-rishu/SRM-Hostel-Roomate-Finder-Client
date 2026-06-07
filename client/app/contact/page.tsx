@@ -17,7 +17,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen pt-4 pb-10 px-4 sm:px-6 lg:px-8 relative z-10">
       <div className="max-w-3xl mx-auto space-y-4">
-        {/* Back + Header */}
+        {}
         <div className="space-y-4 animate-fade-up">
           <Link href="/">
             <Button
@@ -44,7 +44,7 @@ export default function ContactPage() {
 
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-fade-up">
-          {/* Response Time */}
+          {}
           <div className="rounded-xl border border-[var(--border-primary)] bg-[var(--bg-card)] p-4 flex items-start gap-3">
             <div className="p-2 rounded-lg bg-[var(--accent-subtle)] border border-[var(--border-accent)] flex-shrink-0">
               <Clock className="h-4 w-4 text-[var(--accent)]" />
@@ -63,7 +63,7 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* What to include */}
+          {}
           <div className="rounded-xl border border-[var(--border-primary)] bg-[var(--bg-card)] p-4 flex items-start gap-3">
             <div className="p-2 rounded-lg bg-[var(--accent-subtle)] border border-[var(--border-accent)] flex-shrink-0">
               <Sparkles className="h-4 w-4 text-[var(--accent)]" />
@@ -79,7 +79,7 @@ export default function ContactPage() {
           </div>
         </div>
 
-        {/* Social / Other Channels */}
+        {}
         <div className="rounded-2xl border border-[var(--border-primary)] bg-[var(--bg-card)] p-6 animate-fade-up">
           <h2 className="text-base font-bold text-[var(--text-primary)] mb-0.5">
             Find us on Social Media
@@ -89,7 +89,7 @@ export default function ContactPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3">
-            {/* Instagram */}
+            {}
             <a
               href="https://www.instagram.com/srm.insider/"
               target="_blank"
@@ -109,7 +109,7 @@ export default function ContactPage() {
               <ExternalLink className="h-4 w-4 text-[var(--text-muted)] group-hover:text-pink-400 transition-colors duration-200" />
             </a>
 
-            {/* LinkedIn */}
+            {}
             <a
               href="https://www.linkedin.com/company/srm-insider-community/"
               target="_blank"
@@ -131,7 +131,7 @@ export default function ContactPage() {
               <ExternalLink className="h-4 w-4 text-[var(--text-muted)] group-hover:text-sky-400 transition-colors duration-200" />
             </a>
 
-            {/* Email shortcut */}
+            {}
             <a
               href="mailto:support@srminsider.live"
               id="contact-email-social"
